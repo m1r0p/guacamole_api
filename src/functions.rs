@@ -24,11 +24,14 @@ pub fn get_config_params(string_path: String) -> Result<Vec<String>, Box<dyn Err
     builder = builder.add_source(File::new(&string_path, FileFormat::Json));
     builder = builder.set_override("override", "1")?;
     let raw_conf = builder.build().unwrap();
+    config_params.push(raw_conf.get("csv_input_file").unwrap());
     config_params.push(raw_conf.get("gua_proto_address").unwrap());
+    config_params.push(raw_conf.get("gua_token").unwrap());
+ 
     return Ok(config_params);
 }
 
-pub fn parse_csv(csv_path: String) -> Result<Vec<GuaConn>, Box<dyn Error>> {
+pub fn parse_csv(csv_path: &String) -> Result<Vec<GuaConn>, Box<dyn Error>> {
     let mut gua_connections: Vec<GuaConn> = Vec::new();
     let reader = csv::Reader::from_path(csv_path);
     for record in reader?.deserialize() {
