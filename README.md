@@ -1,4 +1,4 @@
-## This scrtipt can interact with Apache Guacamole REST API
+# This scrtipt can interact with Apache Guacamole REST API
 
 ## Installation
 Install Rust by [rustup](https://rustup.rs/)
