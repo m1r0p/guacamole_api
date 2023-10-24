@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GuaConn {
-    pub PCSCCM: String,
-    pub PrimaryUserSCCM: String,
-    pub IPv4: String,
-    pub MAC: String,
+    pub hostname: String,
+    pub username: String,
+    pub ipv4: String,
+    pub mac: String,
 }
