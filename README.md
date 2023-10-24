@@ -3,5 +3,10 @@
 ## Installation
 Install Rust by [rustup](https://rustup.rs/)
 
-## USAGE: 
-```cargo run -- --config <path_to_your_config>``` or ```<path_to_compiled_bin_file> --config <path_to_your_config>```
+## Usage 
+
+```cargo run -- --config <path_to_your_config>``` 
+
+or 
+
+```<path_to_compiled_bin_file> --config <path_to_your_config>```
