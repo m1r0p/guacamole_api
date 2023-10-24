@@ -6,7 +6,7 @@
 pub mod structures;
 pub use structures::GuaConn;
 
-//use config::{Config, File, FileFormat};
+use config::{Config, File, FileFormat};
 //use reqwest::header::{HeaderMap, CONTENT_TYPE};
 //use serde_json::Value;
 use std::error::Error;
@@ -16,23 +16,17 @@ use csv;
 //    println!("{}", std::any::type_name::<T>())
 //}
 
-//pub fn get_config_params(string_path: String) -> Result<Vec<String>, Box<dyn Error>> {
-//    let mut config_params: Vec<String> = Vec::new();
-//
-//    let mut builder = Config::builder();
-//    builder = builder.set_default("default", "1")?;
-//    builder = builder.add_source(File::new(&string_path, FileFormat::Json));
-//    builder = builder.set_override("override", "1")?;
-//    let raw_conf = builder.build().unwrap();
-//    config_params.push(raw_conf.get("mikrotik_ip").unwrap());
-//    config_params.push(raw_conf.get("mikrotik_user").unwrap());
-//    config_params.push(raw_conf.get("mikrotik_password").unwrap());
-//    config_params.push(raw_conf.get("mikrotik_dhcp_server").unwrap());
-//    config_params.push(raw_conf.get("phpipam_proto_address").unwrap());
-//    config_params.push(raw_conf.get("phpipam_token").unwrap());
-//    config_params.push(raw_conf.get("phpipam_subnet_id").unwrap());
-//    return Ok(config_params);
-//}
+pub fn get_config_params(string_path: String) -> Result<Vec<String>, Box<dyn Error>> {
+    let mut config_params: Vec<String> = Vec::new();
+
+    let mut builder = Config::builder();
+    builder = builder.set_default("default", "1")?;
+    builder = builder.add_source(File::new(&string_path, FileFormat::Json));
+    builder = builder.set_override("override", "1")?;
+    let raw_conf = builder.build().unwrap();
+    config_params.push(raw_conf.get("gua_proto_address").unwrap());
+    return Ok(config_params);
+}
 
 pub fn parse_csv(csv_path: String) -> Result<Vec<GuaConn>, Box<dyn Error>> {
     let mut gua_connections: Vec<GuaConn> = Vec::new();

@@ -19,11 +19,16 @@ fn main() {
         i = i + 1;
     }
 
-    let vec_gua_conn: Vec<GuaConn> = parse_csv(input_csv_path).unwrap();
-    for i in vec_gua_conn.iter() {
-        println!("{}\t{}\t{}\t{}", i.hostname, i.username, i.ipv4, i.mac);
+    if input_csv_path.len() != 0 { 
+        let vec_gua_conn: Vec<GuaConn> = parse_csv(input_csv_path).unwrap();
+        for i in vec_gua_conn.iter() {
+            println!("{}\t{}\t{}\t{}", i.hostname, i.username, i.ipv4, i.mac);
+        }
     }
-    //let vec_config: Vec<String> = get_config_params(config_path).unwrap();
+
+    if config_path.len() != 0 {
+        let _vec_config: Vec<String> = get_config_params(config_path).unwrap();
+    }
     //let mikrotik_leases: Vec<MikrotikLease> = get_mikrotik_leases(
     //    &vec_config[0],
     //    &vec_config[1],
