@@ -1,16 +1,14 @@
 #[allow(dead_code)]
-//pub mod conf;
-//pub use conf::{
-//    MIKROTIK_DHCP_LEASES, MIKROTIK_PROTO, PHPIPAM_REST_ADDRESSES, PHPIPAM_REST_SUBNETS,
-//};
+pub mod conf;
+pub use conf::CUA_REST_CONNECTIONS;
 pub mod structures;
 pub use structures::GuaConn;
 
 use config::{Config, File, FileFormat};
-//use reqwest::header::{HeaderMap, CONTENT_TYPE};
+use reqwest::header::{HeaderMap, CONTENT_TYPE};
 //use serde_json::Value;
-use std::error::Error;
 use csv;
+use std::error::Error;
 
 //fn print_type_of<T>(_: &T) {
 //    println!("{}", std::any::type_name::<T>())
@@ -27,7 +25,7 @@ pub fn get_config_params(string_path: String) -> Result<Vec<String>, Box<dyn Err
     config_params.push(raw_conf.get("csv_input_file").unwrap());
     config_params.push(raw_conf.get("gua_proto_address").unwrap());
     config_params.push(raw_conf.get("gua_token").unwrap());
- 
+
     return Ok(config_params);
 }
 
@@ -222,48 +220,48 @@ pub fn parse_csv(csv_path: &String) -> Result<Vec<GuaConn>, Box<dyn Error>> {
 //    return Ok(());
 //}
 //
-//#[tokio::main]
-//pub async fn create_phpipam_host(
-//    phpipam_address: &String,
-//    token: &String,
-//    subnet_id: &String,
-//    ip_address: &String,
-//    hostname: &String,
-//    mac_address: &String,
-//    status: &String,
-//    dynamic: &String,
-//) -> Result<(), Box<dyn Error>> {
-//    let mut headers = HeaderMap::new();
-//    headers.insert("token", token.parse().unwrap());
-//    headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
-//    let mut dynamic_edited: String = String::new();
-//    match dynamic {
-//        _ if dynamic == "true" => dynamic_edited.push_str("Dynamic"),
-//        _ if dynamic == "false" => dynamic_edited.push_str("Reserved"),
-//        _ => dynamic_edited.push_str("None"),
-//    }
-//    let mut state: u8 = 2;
-//    if status == "waiting" && dynamic == "false" {
-//        state = 1;
-//    }
-//    if status == "bound" && dynamic == "false" {
-//        state = 3;
-//    }
-//
-//    let request_data = format!(
-//        r#"{{"hostname":"{}","subnetId":"{}","ip":"{}","mac":"{}","custom_Status":"{}","state":"{}","custom_Dynamic":"{}"}}"#,
-//        hostname, subnet_id, ip_address, mac_address, status, state, dynamic_edited
-//    );
-//
-//    let client = reqwest::Client::new();
-//
-//    let _resp = client
-//        .post(format!("{}{}", phpipam_address, PHPIPAM_REST_ADDRESSES))
-//        .headers(headers.clone())
-//        .body(request_data)
-//        .send()
-//        .await?
-//        .text()
-//        .await?;
-//    return Ok(());
-//}
+#[tokio::main]
+pub async fn create_gua_connection(
+    gua_address: &String,
+    token: &String,
+    subnet_id: &String,
+    ip_address: &String,
+    hostname: &String,
+    mac_address: &String,
+    status: &String,
+    dynamic: &String,
+) -> Result<(), Box<dyn Error>> {
+    let mut headers = HeaderMap::new();
+    headers.insert("token", token.parse().unwrap());
+    headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
+    let mut dynamic_edited: String = String::new();
+    match dynamic {
+        _ if dynamic == "true" => dynamic_edited.push_str("Dynamic"),
+        _ if dynamic == "false" => dynamic_edited.push_str("Reserved"),
+        _ => dynamic_edited.push_str("None"),
+    }
+    let mut state: u8 = 2;
+    if status == "waiting" && dynamic == "false" {
+        state = 1;
+    }
+    if status == "bound" && dynamic == "false" {
+        state = 3;
+    }
+
+    let request_data = format!(
+        r#"{{"hostname":"{}","subnetId":"{}","ip":"{}","mac":"{}","custom_Status":"{}","state":"{}","custom_Dynamic":"{}"}}"#,
+        hostname, subnet_id, ip_address, mac_address, status, state, dynamic_edited
+    );
+
+    let client = reqwest::Client::new();
+
+    let _resp = client
+        .post(format!("{}{}", phpipam_address, PHPIPAM_REST_ADDRESSES))
+        .headers(headers.clone())
+        .body(request_data)
+        .send()
+        .await?
+        .text()
+        .await?;
+    return Ok(());
+}

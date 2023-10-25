@@ -20,14 +20,13 @@ fn main() {
     }
 
     let vec_config: Vec<String> = get_config_params(config_path).unwrap();
-    
+
     let vec_gua_conn: Vec<GuaConn> = parse_csv(&vec_config[0]).unwrap();
     for i in vec_gua_conn.iter() {
         println!("{}\t{}\t{}\t{}", i.hostname, i.username, i.ipv4, i.mac);
     }
-  
-    
-    //if input_csv_path.len() != 0 { 
+
+    //if input_csv_path.len() != 0 {
     //    let vec_gua_conn: Vec<GuaConn> = parse_csv(input_csv_path).unwrap();
     //    for i in vec_gua_conn.iter() {
     //        println!("{}\t{}\t{}\t{}", i.hostname, i.username, i.ipv4, i.mac);
