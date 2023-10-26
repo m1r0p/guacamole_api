@@ -22,11 +22,12 @@ fn main() {
     let vec_config: Vec<String> = get_config_params(config_path).unwrap();
 
     let token: String = create_gua_token(&vec_config[1], &vec_config[2], &vec_config[3]).unwrap();
+    //println!("{}", &token);
     let connections: Vec<GuaConn> = get_gua_connections(&vec_config[1], &token).unwrap();
     if connections.len() > 0 {
         println!("################### START DELETING CONNECTIONS ####################");
         for i in connections.iter() {
-            //println!("{:?}", i.identifier);
+            println!("{:?}", i.identifier);
             _ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
             println!("{} - deleted", &i.name);
         }
@@ -41,37 +42,4 @@ fn main() {
 
     _ = delete_gua_token(&vec_config[1], &token);
 
-    //for i in vec_gua_conn.iter() {
-    //    println!("{}\t{}\t{}\t{}", i.hostname, i.username, i.ipv4, i.mac);
-    //}
-
-    //if input_csv_path.len() != 0 {
-    //    let vec_gua_conn: Vec<GuaConn> = parse_csv(input_csv_path).unwrap();
-    //    for i in vec_gua_conn.iter() {
-    //        println!("{}\t{}\t{}\t{}", i.hostname, i.username, i.ipv4, i.mac);
-    //    }
-    //}
-
-    //let mikrotik_leases: Vec<MikrotikLease> = get_mikrotik_leases(
-    //    &vec_config[0],
-    //    &vec_config[1],
-    //    &vec_config[2],
-    //    &vec_config[3],
-    //)
-    //.unwrap();
-    //let _ = del_phpipam_existing_hosts(&vec_config[4], &vec_config[5], &vec_config[6]);
-
-    //for i in mikrotik_leases.iter() {
-    //    let _ = create_phpipam_host(
-    //        &vec_config[4],
-    //        &vec_config[5],
-    //        &vec_config[6],
-    //        &i.address,
-    //        &i.host_name,
-    //        &i.mac_address,
-    //        &i.status,
-    //        &i.dynamic,
-    //    );
-    //    println!("{:?} - done", &i.address);
-    //}
 }
