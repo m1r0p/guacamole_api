@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 //#[derive(Serialize, Deserialize, Debug)]
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct SccmHost {
     pub hostname: String,
     pub username: String,
@@ -11,6 +11,7 @@ pub struct SccmHost {
     pub mac: String,
 }
 
+#[derive(Debug)]
 pub struct GuaConnAttributes {
     pub guacd_encryption: String,
     pub failover_only: String,
@@ -21,6 +22,7 @@ pub struct GuaConnAttributes {
     pub max_connections_per_user: String,
 }
 
+#[derive(Debug)]
 pub struct GuaConn {
     pub name: String,
     pub identifier: String,
@@ -29,5 +31,3 @@ pub struct GuaConn {
     pub attributes: GuaConnAttributes,
     pub active_connections: u64,
 }
-
-

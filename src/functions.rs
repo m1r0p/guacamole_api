@@ -2,17 +2,17 @@
 pub mod conf;
 pub use conf::{GUA_REST_CONNECTIONS, GUA_REST_TOKENS};
 pub mod structures;
-pub use structures::{SccmHost, GuaConnAttributes, GuaConn};
+pub use structures::{GuaConn, GuaConnAttributes, SccmHost};
 
 use config::{Config, File, FileFormat};
-use reqwest::header::{HeaderMap, CONTENT_TYPE};
-use serde_json::{Value, Map};
 use csv;
+use reqwest::header::{HeaderMap, CONTENT_TYPE};
+use serde_json::{Map, Value};
 use std::error::Error;
 
-fn print_type_of<T>(_: &T) {
-    println!("{}", std::any::type_name::<T>())
-}
+//fn print_type_of<T>(_: &T) {
+//    println!("{}", std::any::type_name::<T>())
+//}
 
 pub fn get_config_params(string_path: String) -> Result<Vec<String>, Box<dyn Error>> {
     let mut config_params: Vec<String> = Vec::new();
@@ -262,7 +262,10 @@ pub async fn get_gua_connections(
     let client = reqwest::Client::new();
 
     let resp = client
-        .get(format!("{}{}?token={}", gua_address, GUA_REST_CONNECTIONS, gua_token))
+        .get(format!(
+            "{}{}?token={}",
+            gua_address, GUA_REST_CONNECTIONS, gua_token
+        ))
         .send()
         .await?
         .text()
@@ -270,36 +273,51 @@ pub async fn get_gua_connections(
     let resp_json: Value = serde_json::from_str(resp.as_str()).unwrap();
     let conn_obj_json: &Map<String, Value> = resp_json.as_object().unwrap();
     for raw_conn in conn_obj_json.values() {
-        //let mut conn: GuaConn 
-        //println!("{:?}", raw_conn);
-        
         let attributes: GuaConnAttributes = GuaConnAttributes {
             failover_only: raw_conn["attributes"]["failover-only"].to_string(),
             guacd_encryption: raw_conn["attributes"]["guacd-encryption"].to_string(),
             guacd_hostname: raw_conn["attributes"]["guacd-hostname"].to_string(),
             guacd_port: raw_conn["attributes"]["guacd-port"].to_string(),
             max_connections: raw_conn["attributes"]["max-connections"].to_string(),
-            max_connections_per_user: raw_conn["attributes"]["max-connections-per-user"].to_string(),
+            max_connections_per_user: raw_conn["attributes"]["max-connections-per-user"]
+                .to_string(),
             weight: raw_conn["attributes"]["weight"].to_string(),
         };
 
-        //let conn: GuaConn {
-        //    active_connections: raw_conn["activeConnections"].as_u64().unwrap(),
-        //    attributes: attributes,
-        //    identifier: raw_conn["identifier"].as_str().unwrap().to_string());,
-        //    name: raw_conn["activeConnections"],
-        //}
-        
-        //println!("{}", raw_conn["attributes"]["failover-only"].to_string());
-        //print_type_of(&raw_conn["attributes"]["failover-only"].to_string());
+        let conn: GuaConn = GuaConn {
+            active_connections: raw_conn["activeConnections"].as_u64().unwrap(),
+            attributes: attributes,
+            identifier: raw_conn["identifier"].as_str().unwrap().to_string(),
+            name: raw_conn["name"].as_str().unwrap().to_string(),
+            parent_identifier: raw_conn["parentIdentifier"].as_str().unwrap().to_string(),
+            protocol: raw_conn["protocol"].as_str().unwrap().to_string(),
+        };
+
+        conn_list.push(conn);
     }
 
-    //let test: String = String::from("test");
-    //println!("{}", test);
-    //token.push_str(token_clr);
     return Ok(conn_list);
 }
 
+#[tokio::main]
+pub async fn delete_gua_connection(
+    gua_address: &String,
+    gua_token: &String,
+    conn_id: &String,
+) -> Result<(), Box<dyn Error>> {
+    let client = reqwest::Client::new();
+
+    let _resp = client
+        .delete(format!(
+            "{}{}/{}?token={}",
+            gua_address, GUA_REST_CONNECTIONS, conn_id, gua_token
+        ))
+        .send()
+        .await?
+        .text()
+        .await?;
+    return Ok(());
+}
 
 #[tokio::main]
 pub async fn create_gua_connection(
@@ -420,3 +438,24 @@ pub async fn create_gua_connection(
         .await?;
     return Ok(());
 }
+
+#[tokio::main]
+pub async fn delete_gua_token(
+    gua_address: &String,
+    gua_token: &String,
+) -> Result<(), Box<dyn Error>> {
+    let client = reqwest::Client::new();
+
+    let _resp = client
+        .delete(format!(
+            "{}{}/{}",
+            gua_address, GUA_REST_TOKENS, gua_token
+        ))
+        .send()
+        .await?
+        .text()
+        .await?;
+    return Ok(());
+}
+
+
