@@ -14,7 +14,7 @@ or
 
 ## Links
 
-[REST API reference](https://github.com/ridvanaltun/guacamole-rest-api-documentation/tree/master/docs)
+- [REST API reference](https://github.com/ridvanaltun/guacamole-rest-api-documentation/tree/master/docs)
 
 ## License
 
