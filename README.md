@@ -15,6 +15,8 @@ or
 ## Links
 
 - [REST API reference](https://github.com/ridvanaltun/guacamole-rest-api-documentation/tree/master/docs)
+- [curl examples](https://gist.github.com/atomlab/376901845c3d474d1e60e6b7a3affaae)
+
 
 ## License
 
