@@ -425,7 +425,7 @@ pub async fn create_gua_connection(
 
     let client = reqwest::Client::new();
 
-    let _resp = client
+    let resp = client
         .post(format!(
             "{}{}?token={}",
             gua_address, GUA_REST_CONNECTIONS, gua_token
@@ -436,6 +436,8 @@ pub async fn create_gua_connection(
         .await?
         .text()
         .await?;
+
+    println!("{:?}", resp);
     return Ok(());
 }
 
@@ -447,15 +449,10 @@ pub async fn delete_gua_token(
     let client = reqwest::Client::new();
 
     let _resp = client
-        .delete(format!(
-            "{}{}/{}",
-            gua_address, GUA_REST_TOKENS, gua_token
-        ))
+        .delete(format!("{}{}/{}", gua_address, GUA_REST_TOKENS, gua_token))
         .send()
         .await?
         .text()
         .await?;
     return Ok(());
 }
-
-

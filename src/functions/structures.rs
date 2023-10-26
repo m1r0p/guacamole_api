@@ -1,6 +1,6 @@
 //////// structures
 #[allow(dead_code)]
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 //#[derive(Serialize, Deserialize, Debug)]
 #[derive(Deserialize, Debug)]
