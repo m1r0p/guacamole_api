@@ -267,17 +267,35 @@ pub async fn get_gua_connections(
         .await?
         .text()
         .await?;
-    //let resp_json: Value = serde_json::from_str(resp.as_str()).unwrap();
-    //let conn_obj_json: &Map<String, Value> = resp_json.as_object().unwrap();
-    //let conn_vec_json: &Vec<Value> = conn_obj_json.as_array().unwrap();
+    let resp_json: Value = serde_json::from_str(resp.as_str()).unwrap();
+    let conn_obj_json: &Map<String, Value> = resp_json.as_object().unwrap();
+    for raw_conn in conn_obj_json.values() {
+        //let mut conn: GuaConn 
+        //println!("{:?}", raw_conn);
+        
+        let attributes: GuaConnAttributes = GuaConnAttributes {
+            failover_only: raw_conn["attributes"]["failover-only"].to_string(),
+            guacd_encryption: raw_conn["attributes"]["guacd-encryption"].to_string(),
+            guacd_hostname: raw_conn["attributes"]["guacd-hostname"].to_string(),
+            guacd_port: raw_conn["attributes"]["guacd-port"].to_string(),
+            max_connections: raw_conn["attributes"]["max-connections"].to_string(),
+            max_connections_per_user: raw_conn["attributes"]["max-connections-per-user"].to_string(),
+            weight: raw_conn["attributes"]["weight"].to_string(),
+        };
 
-    //let token_clr: &Vec<Value> = &token_json["authToken"].as_str().unwrap();
-    print_type_of(&resp);
-    //println!("{:?}", resp_json);
-    //println!("{:?}", resp);
-    //for i in conn_vec_json.iter() {
-    //    println!("{:?}", i);
-    //}
+        //let conn: GuaConn {
+        //    active_connections: raw_conn["activeConnections"].as_u64().unwrap(),
+        //    attributes: attributes,
+        //    identifier: raw_conn["identifier"].as_str().unwrap().to_string());,
+        //    name: raw_conn["activeConnections"],
+        //}
+        
+        //println!("{}", raw_conn["attributes"]["failover-only"].to_string());
+        //print_type_of(&raw_conn["attributes"]["failover-only"].to_string());
+    }
+
+    //let test: String = String::from("test");
+    //println!("{}", test);
     //token.push_str(token_clr);
     return Ok(conn_list);
 }

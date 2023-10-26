@@ -24,10 +24,10 @@ pub struct GuaConnAttributes {
 pub struct GuaConn {
     pub name: String,
     pub identifier: String,
-    pub parentIdentifier: String,
+    pub parent_identifier: String,
     pub protocol: String,
     pub attributes: GuaConnAttributes,
-    pub activeConnections: String,
+    pub active_connections: u64,
 }
 
 
