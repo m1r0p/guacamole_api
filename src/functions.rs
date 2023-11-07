@@ -144,10 +144,15 @@ pub async fn create_gua_connection(
     sccm_host: &SccmHost,
 ) -> Result<(), Box<dyn Error>> {
     let mut conn_user: String = String::new();
-    if sccm_host.username != "NO USER" {
-        let vec_user: &Vec<&str> = &sccm_host.username.split("\\").collect();
-        conn_user = format!("{}\\\\{}", vec_user[0], vec_user[1]);
+    //if sccm_host.username != "NO USER" {
+    //    let vec_user: &Vec<&str> = &sccm_host.username.split("\\").collect();
+    //    conn_user = format!("{}\\\\{}", vec_user[0], vec_user[1]);
+    //}
+    if sccm_host.username != "no user" {
+        //let vec_user: &Vec<&str> = &sccm_host.username.split("\\").collect();
+        conn_user = sccm_host.username.clone(); 
     }
+
     let mut headers = HeaderMap::new();
     headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
 
@@ -203,7 +208,7 @@ pub async fn create_gua_connection(
 "hostname": "{}",
 "username": "{}",
 "password": "",
-"domain": "domain",
+"domain": "developex",
 "gateway-hostname": "",
 "gateway-username": "",
 "gateway-password": "",
