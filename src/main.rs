@@ -24,32 +24,33 @@ fn main() {
 
     //// create token for this session
     let token: String = create_gua_token(&vec_config[1], &vec_config[2], &vec_config[3]).unwrap();
-    println!("{}", &token);
+    println!("token: {}", &token);
     
-    ////// get existent guacamole connections
-    //let connections: Vec<GuaConn> = get_gua_connections(&vec_config[1], &token).unwrap();
-    //
-    ////// deleting existent RDP connections
-    //if connections.len() > 0 {
-    //    println!("################### START DELETING CONNECTIONS ####################");
-    //    for i in connections.iter() {
-    //        if i.protocol == "rdp" {
-    //            println!("{:?}", i.identifier);
-    //            _ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
-    //            println!("{} - deleted", &i.name);
-    //        }
-    //    }
-    //}
+    //// get existent guacamole connections
+    let connections: Vec<GuaConn> = get_gua_connections(&vec_config[1], &token).unwrap();
+    
+    
+    //// deleting existent RDP connections
+    if connections.len() > 0 {
+        println!("################### START DELETING CONNECTIONS ####################");
+        for i in connections.iter() {
+            if i.protocol == "rdp" {
+                println!("{:?}", i.identifier);
+                _ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
+                println!("{} - deleted", &i.name);
+            }
+        }
+    }
 
-    ////// create RDP connections exported from SCCM hosts (from .csv file)
-    //let sccm_hosts: Vec<SccmHost> = parse_csv(&vec_config[0]).unwrap();
-    //println!("################### START CREATING CONNECTIONS ####################");
-    //for i in sccm_hosts {
-    //    _ = create_gua_connection(&vec_config[1], &token, &i);
-    //    println!("{} - created", &i.hostname);
-    //}
+    //// create RDP connections exported from SCCM hosts (from .csv file)
+    let sccm_hosts: Vec<SccmHost> = parse_csv(&vec_config[0]).unwrap();
+    println!("################### START CREATING CONNECTIONS ####################");
+    for i in sccm_hosts {
+        _ = create_gua_connection(&vec_config[1], &token, &i);
+        println!("{} - created", &i.hostname);
+    }
 
-    ////// deleting token for this session (cleaning)
-    //_ = delete_gua_token(&vec_config[1], &token);
+    //// deleting token for this session (cleaning)
+    _ = delete_gua_token(&vec_config[1], &token);
 
 }
