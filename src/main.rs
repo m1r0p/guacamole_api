@@ -46,6 +46,11 @@ fn main() {
                     println!("{}", &i.name);
                 } else {
                     println!("UPDATING EXISTENT CONNECTION");
+                    for j in sccm_hosts.iter() {
+                        if j.hostname == i.name {
+                            println!("{}", &i.name);
+                        }
+                    }
 
                 }
                 //println!("{:?}", &i);
