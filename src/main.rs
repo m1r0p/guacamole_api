@@ -21,36 +21,57 @@ fn main() {
 
     let vec_config: Vec<String> = get_config_params(config_path).unwrap();
 
-
     //// create token for this session
     let token: String = create_gua_token(&vec_config[1], &vec_config[2], &vec_config[3]).unwrap();
     println!("token: {}", &token);
-    
+
     //// get existent guacamole connections
     let connections: Vec<GuaConn> = get_gua_connections(&vec_config[1], &token).unwrap();
-    
-    
-    //// deleting existent RDP connections
+
+    //// parse .csv and get actual host list from SCCM
+    let sccm_hosts: Vec<SccmHost> = parse_csv(&vec_config[0]).unwrap();
+
+    ////create separate vector of PC names for comparing hostnames
+    let mut sccm_host_names: Vec<String> = Vec::new();
+    for host in sccm_hosts.iter() {
+        sccm_host_names.push(host.hostname.clone());
+    }
+
+    //// compare attributes and update or delete existent RDP connections
     if connections.len() > 0 {
-        println!("################### START DELETING CONNECTIONS ####################");
         for i in connections.iter() {
             if i.protocol == "rdp" {
-                println!("{:?}", i.identifier);
-                _ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
-                println!("{} - deleted", &i.name);
+                if !sccm_host_names.contains(&i.name) {
+                    println!("DELETING CONNECTION");
+                    println!("{}", &i.name);
+                } else {
+                    println!("UPDATING EXISTENT CONNECTION");
+
+                }
+                //println!("{:?}", &i);
             }
         }
     }
 
-    //// create RDP connections exported from SCCM hosts (from .csv file)
-    let sccm_hosts: Vec<SccmHost> = parse_csv(&vec_config[0]).unwrap();
-    println!("################### START CREATING CONNECTIONS ####################");
-    for i in sccm_hosts {
-        _ = create_gua_connection(&vec_config[1], &token, &i);
-        println!("{} - created", &i.hostname);
-    }
+    //// deleting existent RDP connections
+    //if connections.len() > 0 {
+    //    println!("################### START DELETING CONNECTIONS ####################");
+    //    for i in connections.iter() {
+    //        if i.protocol == "rdp" {
+    //            println!("{:?}", i.identifier);
+    //            _ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
+    //            println!("{} - deleted", &i.name);
+    //        }
+    //    }
+    //}
+
+    //// create RDP connections
+    //println!("################### START CREATING CONNECTIONS ####################");
+    //for i in sccm_hosts {
+    //    _ = create_gua_connection(&vec_config[1], &token, &i);
+    //    println!("{} - created", &i.hostname);
+    //}
 
     //// deleting token for this session (cleaning)
     _ = delete_gua_token(&vec_config[1], &token);
-
 }

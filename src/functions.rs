@@ -150,7 +150,7 @@ pub async fn create_gua_connection(
     //}
     if sccm_host.username != "no user" {
         //let vec_user: &Vec<&str> = &sccm_host.username.split("\\").collect();
-        conn_user = sccm_host.username.clone(); 
+        conn_user = sccm_host.username.clone();
     }
 
     let mut headers = HeaderMap::new();
@@ -273,7 +273,7 @@ pub async fn update_gua_connection(
 ) -> Result<(), Box<dyn Error>> {
     let mut conn_user: String = String::new();
     if sccm_host.username != "no user" {
-        conn_user = sccm_host.username.clone(); 
+        conn_user = sccm_host.username.clone();
     }
 
     let mut headers = HeaderMap::new();
@@ -386,7 +386,6 @@ pub async fn update_gua_connection(
 
     return Ok(());
 }
-
 
 #[tokio::main]
 pub async fn delete_gua_token(
