@@ -102,6 +102,8 @@ pub async fn get_gua_connections(
             weight: raw_conn["attributes"]["weight"].to_string(),
         };
 
+        let rdp_attributes: [String; 5] = get_gua_connection_details(&gua_address, &gua_token, &raw_conn["identifier"].as_str().unwrap().to_string()).unwrap();
+
         let conn: GuaConn = GuaConn {
             active_connections: raw_conn["activeConnections"].as_u64().unwrap(),
             attributes: attributes,
@@ -109,12 +111,70 @@ pub async fn get_gua_connections(
             name: raw_conn["name"].as_str().unwrap().to_string(),
             parent_identifier: raw_conn["parentIdentifier"].as_str().unwrap().to_string(),
             protocol: raw_conn["protocol"].as_str().unwrap().to_string(),
+            hostname: rdp_attributes[0].clone(),
+            port: rdp_attributes[1].clone(),
+            username: rdp_attributes[2].clone(),
+            domain: rdp_attributes[3].clone(),
+            ignore_cert: rdp_attributes[4].clone(),
         };
 
         conn_list.push(conn);
     }
 
     return Ok(conn_list);
+}
+
+#[tokio::main]
+pub async fn get_gua_connection_details(
+    gua_address: &String,
+    gua_token: &String,
+    conn_id: &String,
+) -> Result<[String; 5], Box<dyn Error>> {
+    let client = reqwest::Client::new();
+
+    let resp = client
+        .get(format!(
+            "{}{}/{}/parameters?token={}",
+            gua_address, GUA_REST_CONNECTIONS, conn_id, gua_token
+        ))
+        .send()
+        .await?
+        .text()
+        .await?;
+    let resp_json: Value = serde_json::from_str(resp.as_str()).unwrap();
+
+    let mut domain: String = String::new();
+    match resp_json["domain"].as_str() {
+        None => domain.push_str("None"),
+        Some(x) => domain.push_str(x),
+    }
+
+    let mut hostname: String = String::new();
+    match resp_json["hostname"].as_str() {
+        None => hostname.push_str("None"),
+        Some(x) => hostname.push_str(x),
+    }
+
+    let mut ignore_cert: String = String::new();
+    match resp_json["ignore-cert"].as_str() {
+        None => ignore_cert.push_str("None"),
+        Some(x) => ignore_cert.push_str(x),
+    }
+
+    let mut port: String = String::new();
+    match resp_json["port"].as_str() {
+        None => port.push_str("None"),
+        Some(x) => port.push_str(x),
+    }
+
+    let mut username: String = String::new();
+    match resp_json["username"].as_str() {
+        None => username.push_str("None"),
+        Some(x) => username.push_str(x),
+    }
+
+    let conn_parameters: [String; 5] = [hostname, port, username, domain, ignore_cert];
+    return Ok(conn_parameters);
 }
 
 #[tokio::main]

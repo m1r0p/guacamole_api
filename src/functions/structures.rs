@@ -30,4 +30,9 @@ pub struct GuaConn {
     pub protocol: String,
     pub attributes: GuaConnAttributes,
     pub active_connections: u64,
+    pub hostname: String, 
+    pub port: String, 
+    pub username: String, 
+    pub domain: String, 
+    pub ignore_cert: String,
 }

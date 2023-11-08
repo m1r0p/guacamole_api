@@ -40,6 +40,10 @@ fn main() {
     //// compare attributes and update or delete existent RDP connections
     if connections.len() > 0 {
         for i in connections.iter() {
+            //println!("{}", &i.name);
+            //let conn_det: [String; 5] =
+            //    get_gua_connection_details(&vec_config[1], &token, &i.identifier).unwrap();
+            //println!("{:?}", conn_det);
             if i.protocol == "rdp" {
                 if !sccm_host_names.contains(&i.name) {
                     println!("DELETING CONNECTION");
@@ -48,10 +52,9 @@ fn main() {
                     println!("UPDATING EXISTENT CONNECTION");
                     for j in sccm_hosts.iter() {
                         if j.hostname == i.name {
-                            println!("{}", &i.name);
+                            println!("{} - {}", &i.name, &i.identifier);
                         }
                     }
-
                 }
                 //println!("{:?}", &i);
             }
@@ -78,5 +81,5 @@ fn main() {
     //}
 
     //// deleting token for this session (cleaning)
-    _ = delete_gua_token(&vec_config[1], &token);
+    //_ = delete_gua_token(&vec_config[1], &token);
 }
