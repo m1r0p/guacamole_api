@@ -1,4 +1,7 @@
 //////// structures
+pub mod enums;
+pub use enums::ProtoBasedAttributes;
+
 #[allow(dead_code)]
 use serde::Deserialize;
 
@@ -30,9 +33,17 @@ pub struct GuaConn {
     pub protocol: String,
     pub attributes: GuaConnAttributes,
     pub active_connections: u64,
+    pub proto_based_attributes: ProtoBasedAttributes,
+}
+
+#[derive(Debug)]
+pub struct GuaRDPattributes {
     pub hostname: String,
     pub port: String,
     pub username: String,
     pub domain: String,
     pub ignore_cert: String,
 }
+
+#[derive(Debug)]
+pub struct GuaVNCattributes {}

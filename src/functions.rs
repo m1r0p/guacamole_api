@@ -2,7 +2,8 @@
 pub mod conf;
 pub use conf::{GUA_REST_CONNECTIONS, GUA_REST_TOKENS};
 pub mod structures;
-pub use structures::{GuaConn, GuaConnAttributes, SccmHost};
+pub use structures::enums::ProtoBasedAttributes;
+pub use structures::{GuaConn, GuaConnAttributes, GuaRDPattributes, GuaVNCattributes, SccmHost};
 
 use config::{Config, File, FileFormat};
 use csv;
@@ -83,13 +84,15 @@ pub async fn get_gua_connections(
     let tkn: String = gua_token.clone();
     let gua_addr: Arc<String> = Arc::new(addr);
     let gua_tkn: Arc<String> = Arc::new(tkn);
-   
+
     let client = reqwest::Client::new();
 
     let resp = client
         .get(format!(
             "{}{}?token={}",
-            gua_addr.clone(), GUA_REST_CONNECTIONS, gua_tkn.clone()
+            gua_addr.clone(),
+            GUA_REST_CONNECTIONS,
+            gua_tkn.clone()
         ))
         .send()
         .await?
@@ -112,15 +115,11 @@ pub async fn get_gua_connections(
         let conn_id: String = raw_conn["identifier"].as_str().unwrap().to_string().clone();
         let gua_addr = Arc::clone(&gua_addr);
         let gua_tkn = Arc::clone(&gua_tkn);
- 
-        let rdp_attributes: [String; 5]  = tokio::task::spawn_blocking(move || { 
-        //let rdp_attributes: [String; 5]  = thread::spawn(move || { 
-            let rdp_attrs: [String; 5] = get_gua_connection_details(
-                gua_addr,
-                gua_tkn,
-                &conn_id,
-            )
-            .unwrap();
+
+        let rdp_attributes_array: [String; 5] = tokio::task::spawn_blocking(move || {
+            //let rdp_attributes: [String; 5]  = thread::spawn(move || {
+            let rdp_attrs: [String; 5] =
+                get_gua_connection_details(gua_addr, gua_tkn, &conn_id).unwrap();
             rdp_attrs
         })
         .await
@@ -128,7 +127,14 @@ pub async fn get_gua_connections(
         .unwrap();
         //println!("{:?}", rdp_attributes);
         //println!("{} {} {} {} {}", rdp_attributes[0], rdp_attributes[1], rdp_attributes[2], rdp_attributes[3], rdp_attributes[4]);
-       
+
+        let rdp_attributes = ProtoBasedAttributes::RDP(GuaRDPattributes {
+            hostname: rdp_attributes_array[0].clone(),
+            port: rdp_attributes_array[1].clone(),
+            username: rdp_attributes_array[2].clone(),
+            domain: rdp_attributes_array[3].clone(),
+            ignore_cert: rdp_attributes_array[4].clone(),
+        });
 
         let conn: GuaConn = GuaConn {
             active_connections: raw_conn["activeConnections"].as_u64().unwrap(),
@@ -137,11 +143,7 @@ pub async fn get_gua_connections(
             name: raw_conn["name"].as_str().unwrap().to_string(),
             parent_identifier: raw_conn["parentIdentifier"].as_str().unwrap().to_string(),
             protocol: raw_conn["protocol"].as_str().unwrap().to_string(),
-            hostname: rdp_attributes[0].clone(),
-            port: rdp_attributes[1].clone(),
-            username: rdp_attributes[2].clone(),
-            domain: rdp_attributes[3].clone(),
-            ignore_cert: rdp_attributes[4].clone(),
+            proto_based_attributes: rdp_attributes,
         };
 
         conn_list.push(conn);
