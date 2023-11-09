@@ -113,8 +113,8 @@ pub async fn get_gua_connections(
         };
 
         let conn_id: String = raw_conn["identifier"].as_str().unwrap().to_string().clone();
-        let gua_addr = Arc::clone(&gua_addr);
-        let gua_tkn = Arc::clone(&gua_tkn);
+        let gua_addr: Arc<String> = Arc::clone(&gua_addr);
+        let gua_tkn: Arc<String> = Arc::clone(&gua_tkn);
 
         let rdp_attributes_array: [String; 5] = tokio::task::spawn_blocking(move || {
             //let rdp_attributes: [String; 5]  = thread::spawn(move || {
