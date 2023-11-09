@@ -9,6 +9,8 @@ use csv;
 use reqwest::header::{HeaderMap, CONTENT_TYPE};
 use serde_json::{Map, Value};
 use std::error::Error;
+//use std::thread;
+use std::sync::Arc;
 
 //fn print_type_of<T>(_: &T) {
 //    println!("{}", std::any::type_name::<T>())
@@ -77,19 +79,24 @@ pub async fn get_gua_connections(
     gua_token: &String,
 ) -> Result<Vec<GuaConn>, Box<dyn Error>> {
     let mut conn_list: Vec<GuaConn> = Vec::new();
+    let addr: String = gua_address.clone();
+    let tkn: String = gua_token.clone();
+    let gua_addr: Arc<String> = Arc::new(addr);
+    let gua_tkn: Arc<String> = Arc::new(tkn);
+   
     let client = reqwest::Client::new();
 
     let resp = client
         .get(format!(
             "{}{}?token={}",
-            gua_address, GUA_REST_CONNECTIONS, gua_token
+            gua_addr.clone(), GUA_REST_CONNECTIONS, gua_tkn.clone()
         ))
         .send()
         .await?
         .text()
         .await?;
-    let resp_json: Value = serde_json::from_str(resp.as_str()).unwrap();
-    let conn_obj_json: &Map<String, Value> = resp_json.as_object().unwrap();
+    let raw_json: Value = serde_json::from_str(resp.as_str()).unwrap();
+    let conn_obj_json: &Map<String, Value> = raw_json.as_object().unwrap();
     for raw_conn in conn_obj_json.values() {
         let attributes: GuaConnAttributes = GuaConnAttributes {
             failover_only: raw_conn["attributes"]["failover-only"].to_string(),
@@ -102,7 +109,26 @@ pub async fn get_gua_connections(
             weight: raw_conn["attributes"]["weight"].to_string(),
         };
 
-        let rdp_attributes: [String; 5] = get_gua_connection_details(&gua_address, &gua_token, &raw_conn["identifier"].as_str().unwrap().to_string()).unwrap();
+        let conn_id: String = raw_conn["identifier"].as_str().unwrap().to_string().clone();
+        let gua_addr = Arc::clone(&gua_addr);
+        let gua_tkn = Arc::clone(&gua_tkn);
+ 
+        let rdp_attributes: [String; 5]  = tokio::task::spawn_blocking(move || { 
+        //let rdp_attributes: [String; 5]  = thread::spawn(move || { 
+            let rdp_attrs: [String; 5] = get_gua_connection_details(
+                gua_addr,
+                gua_tkn,
+                &conn_id,
+            )
+            .unwrap();
+            rdp_attrs
+        })
+        .await
+        //.join()
+        .unwrap();
+        //println!("{:?}", rdp_attributes);
+        //println!("{} {} {} {} {}", rdp_attributes[0], rdp_attributes[1], rdp_attributes[2], rdp_attributes[3], rdp_attributes[4]);
+       
 
         let conn: GuaConn = GuaConn {
             active_connections: raw_conn["activeConnections"].as_u64().unwrap(),
@@ -126,8 +152,8 @@ pub async fn get_gua_connections(
 
 #[tokio::main]
 pub async fn get_gua_connection_details(
-    gua_address: &String,
-    gua_token: &String,
+    gua_address: Arc<String>,
+    gua_token: Arc<String>,
     conn_id: &String,
 ) -> Result<[String; 5], Box<dyn Error>> {
     let client = reqwest::Client::new();

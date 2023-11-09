@@ -47,12 +47,14 @@ fn main() {
             if i.protocol == "rdp" {
                 if !sccm_host_names.contains(&i.name) {
                     println!("DELETING CONNECTION");
-                    println!("{}", &i.name);
+                    //println!("{}", &i.name);
+                    println!("{:?}", &i);
                 } else {
                     println!("UPDATING EXISTENT CONNECTION");
                     for j in sccm_hosts.iter() {
                         if j.hostname == i.name {
-                            println!("{} - {}", &i.name, &i.identifier);
+                            //println!("{} - {}", &i.name, &i.identifier);
+                            println!("{:?}", &i);
                         }
                     }
                 }
