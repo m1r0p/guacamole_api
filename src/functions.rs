@@ -128,7 +128,7 @@ pub async fn get_gua_connections(
         //println!("{:?}", rdp_attributes);
         //println!("{} {} {} {} {}", rdp_attributes[0], rdp_attributes[1], rdp_attributes[2], rdp_attributes[3], rdp_attributes[4]);
 
-        let rdp_attributes = ProtoBasedAttributes::RDP(GuaRDPattributes {
+        let rdp_attributes: ProtoBasedAttributes = ProtoBasedAttributes::RDP(GuaRDPattributes {
             hostname: rdp_attributes_array[0].clone(),
             port: rdp_attributes_array[1].clone(),
             username: rdp_attributes_array[2].clone(),
