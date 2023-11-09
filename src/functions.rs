@@ -127,8 +127,23 @@ pub async fn get_gua_connections(
         .unwrap();
         //println!("{:?}", rdp_attributes);
         //println!("{} {} {} {} {}", rdp_attributes[0], rdp_attributes[1], rdp_attributes[2], rdp_attributes[3], rdp_attributes[4]);
+        let protocol: String = raw_conn["protocol"].as_str().unwrap().to_string();
 
-        let rdp_attributes: ProtoBasedAttributes = ProtoBasedAttributes::RDP(GuaRDPattributes {
+        //if protocol.as_str() == "rdp" {
+        //    let proto_attributes: ProtoBasedAttributes =
+        //        ProtoBasedAttributes::RDP(GuaRDPattributes {
+        //            hostname: rdp_attributes_array[0].clone(),
+        //            port: rdp_attributes_array[1].clone(),
+        //            username: rdp_attributes_array[2].clone(),
+        //            domain: rdp_attributes_array[3].clone(),
+        //            ignore_cert: rdp_attributes_array[4].clone(),
+        //        });
+        //} else {
+        //    let proto_attributes: ProtoBasedAttributes =
+        //        ProtoBasedAttributes::VNC(GuaVNCattributes {});
+        //}
+
+        let proto_attributes: ProtoBasedAttributes = ProtoBasedAttributes::RDP(GuaRDPattributes {
             hostname: rdp_attributes_array[0].clone(),
             port: rdp_attributes_array[1].clone(),
             username: rdp_attributes_array[2].clone(),
@@ -143,7 +158,7 @@ pub async fn get_gua_connections(
             name: raw_conn["name"].as_str().unwrap().to_string(),
             parent_identifier: raw_conn["parentIdentifier"].as_str().unwrap().to_string(),
             protocol: raw_conn["protocol"].as_str().unwrap().to_string(),
-            proto_based_attributes: rdp_attributes,
+            proto_based_attributes: proto_attributes,
         };
 
         conn_list.push(conn);
