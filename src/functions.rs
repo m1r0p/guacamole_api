@@ -129,28 +129,6 @@ pub async fn get_gua_connections(
         //println!("{} {} {} {} {}", rdp_attributes[0], rdp_attributes[1], rdp_attributes[2], rdp_attributes[3], rdp_attributes[4]);
         let protocol: String = raw_conn["protocol"].as_str().unwrap().to_string();
 
-        //if protocol.as_str() == "rdp" {
-        //    let proto_attributes: ProtoBasedAttributes =
-        //        ProtoBasedAttributes::RDP(GuaRDPattributes {
-        //            hostname: rdp_attributes_array[0].clone(),
-        //            port: rdp_attributes_array[1].clone(),
-        //            username: rdp_attributes_array[2].clone(),
-        //            domain: rdp_attributes_array[3].clone(),
-        //            ignore_cert: rdp_attributes_array[4].clone(),
-        //        });
-        //} else {
-        //    let proto_attributes: ProtoBasedAttributes =
-        //        ProtoBasedAttributes::VNC(GuaVNCattributes {});
-        //}
-
-        //let proto_attributes: ProtoBasedAttributes = ProtoBasedAttributes::RDP(GuaRDPattributes {
-        //    hostname: rdp_attributes_array[0].clone(),
-        //    port: rdp_attributes_array[1].clone(),
-        //    username: rdp_attributes_array[2].clone(),
-        //    domain: rdp_attributes_array[3].clone(),
-        //    ignore_cert: rdp_attributes_array[4].clone(),
-        //});
-
         match protocol.as_str() {
             _ if protocol.as_str() == "rdp" => {
                 let proto_attributes: ProtoBasedAttributes =
@@ -193,18 +171,6 @@ pub async fn get_gua_connections(
 
             &_ => continue,
         }
-
-        //let conn: GuaConn = GuaConn {
-        //    active_connections: raw_conn["activeConnections"].as_u64().unwrap(),
-        //    attributes: attributes,
-        //    identifier: raw_conn["identifier"].as_str().unwrap().to_string(),
-        //    name: raw_conn["name"].as_str().unwrap().to_string(),
-        //    parent_identifier: raw_conn["parentIdentifier"].as_str().unwrap().to_string(),
-        //    protocol: raw_conn["protocol"].as_str().unwrap().to_string(),
-        //    proto_based_attributes: proto_attributes,
-        //};
-
-        //conn_list.push(conn);
     }
 
     return Ok(conn_list);
