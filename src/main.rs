@@ -47,14 +47,14 @@ fn main() {
             if i.protocol == "rdp" {
                 if !sccm_host_names.contains(&i.name) {
                     println!("DELETING CONNECTION");
-                    //println!("{}", &i.name);
-                    println!("{:?}", &i);
+                    println!("{}", &i.name);
+                    //_ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
                 } else {
                     println!("UPDATING EXISTENT CONNECTION");
                     for j in sccm_hosts.iter() {
                         if j.hostname == i.name {
-                            //println!("{} - {}", &i.name, &i.identifier);
-                            println!("{:?}", &i);
+                            println!("{} - {}", &i.name, &i.identifier);
+                            _ = update_gua_connection(&vec_config[1], &token, &j, &i.identifier);
                         }
                     }
                 }
@@ -63,25 +63,21 @@ fn main() {
         }
     }
 
-    //// deleting existent RDP connections
-    //if connections.len() > 0 {
-    //    println!("################### START DELETING CONNECTIONS ####################");
-    //    for i in connections.iter() {
-    //        if i.protocol == "rdp" {
-    //            println!("{:?}", i.identifier);
-    //            _ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
-    //            println!("{} - deleted", &i.name);
-    //        }
-    //    }
-    //}
+    ////create separate vector of connection names for comparing hostnames
+    let mut connection_names: Vec<String> = Vec::new();
+    for conn in connections.iter() {
+        connection_names.push(conn.name.clone());
+    }
 
-    //// create RDP connections
-    //println!("################### START CREATING CONNECTIONS ####################");
-    //for i in sccm_hosts {
-    //    _ = create_gua_connection(&vec_config[1], &token, &i);
-    //    println!("{} - created", &i.hostname);
-    //}
+    //// create non existent connections
+    for i in sccm_hosts.iter() {
+        if !connection_names.contains(&i.hostname) {
+            println!("CREATING CONNECTION");
+            println!("{}", &i.hostname);
+            //_ = create_gua_connection(&vec_config[1], &token, &i);
+        }
+    }
 
-    //// deleting token for this session (cleaning)
-    //_ = delete_gua_token(&vec_config[1], &token);
+    // deleting token for this session (cleaning)
+    _ = delete_gua_token(&vec_config[1], &token);
 }
