@@ -48,7 +48,7 @@ fn main() {
                 if !sccm_host_names.contains(&i.name) {
                     println!("DELETING CONNECTION");
                     println!("{}", &i.name);
-                    //_ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
+                    _ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
                 } else {
                     println!("UPDATING EXISTENT CONNECTION");
                     for j in sccm_hosts.iter() {
@@ -74,7 +74,7 @@ fn main() {
         if !connection_names.contains(&i.hostname) {
             println!("CREATING CONNECTION");
             println!("{}", &i.hostname);
-            //_ = create_gua_connection(&vec_config[1], &token, &i);
+            _ = create_gua_connection(&vec_config[1], &token, &i);
         }
     }
 
