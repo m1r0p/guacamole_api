@@ -361,7 +361,9 @@ pub async fn create_gua_connection(
 "sftp-private-key": "",
 "sftp-passphrase": "",
 "sftp-root-directory": "",
-"sftp-directory": ""
+"sftp-directory": "",
+"wol-send-packet": "true",
+"wol-mac-addr": "{}"
 }},"attributes": {{
 "max-connections": "",
 "max-connections-per-user": "",
@@ -372,7 +374,7 @@ pub async fn create_gua_connection(
 "guacd-hostname": ""
 }}
     }}"#,
-        sccm_host.hostname, sccm_host.ipv4, conn_user
+        sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
     );
 
     let client = reqwest::Client::new();
@@ -484,7 +486,9 @@ pub async fn update_gua_connection(
 "sftp-private-key": "",
 "sftp-passphrase": "",
 "sftp-root-directory": "",
-"sftp-directory": ""
+"sftp-directory": "",
+"wol-send-packet": "true",
+"wol-mac-addr": "{}"
 }},"attributes": {{
 "max-connections": "",
 "max-connections-per-user": "",
@@ -495,7 +499,7 @@ pub async fn update_gua_connection(
 "guacd-hostname": ""
 }}
     }}"#,
-        sccm_host.hostname, sccm_host.ipv4, conn_user
+        sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
     );
 
     let client = reqwest::Client::new();
