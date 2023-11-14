@@ -116,9 +116,9 @@ pub async fn get_gua_connections(
         let gua_addr: Arc<String> = Arc::clone(&gua_addr);
         let gua_tkn: Arc<String> = Arc::clone(&gua_tkn);
 
-        let rdp_attributes_array: [String; 5] = tokio::task::spawn_blocking(move || {
-            //let rdp_attributes: [String; 5]  = thread::spawn(move || {
-            let rdp_attrs: [String; 5] =
+        let rdp_attributes_array: [String; 7] = tokio::task::spawn_blocking(move || {
+            //let rdp_attributes: [String; 7]  = thread::spawn(move || {
+            let rdp_attrs: [String; 7] =
                 get_gua_connection_details(gua_addr, gua_tkn, &conn_id).unwrap();
             rdp_attrs
         })
@@ -138,6 +138,8 @@ pub async fn get_gua_connections(
                         username: rdp_attributes_array[2].clone(),
                         domain: rdp_attributes_array[3].clone(),
                         ignore_cert: rdp_attributes_array[4].clone(),
+                        wol_send_packet: rdp_attributes_array[5].clone(),
+                        wol_mac_addr: rdp_attributes_array[6].clone(),
                     });
 
                 let conn: GuaConn = GuaConn {
@@ -181,7 +183,7 @@ pub async fn get_gua_connection_details(
     gua_address: Arc<String>,
     gua_token: Arc<String>,
     conn_id: &String,
-) -> Result<[String; 5], Box<dyn Error>> {
+) -> Result<[String; 7], Box<dyn Error>> {
     let client = reqwest::Client::new();
 
     let resp = client
@@ -225,7 +227,21 @@ pub async fn get_gua_connection_details(
         Some(x) => username.push_str(x),
     }
 
-    let conn_parameters: [String; 5] = [hostname, port, username, domain, ignore_cert];
+    let mut wol_send_packet: String = String::new();
+    match resp_json["wol-send-packet"].as_str() {
+        None => wol_send_packet.push_str("None"),
+        Some(x) => wol_send_packet.push_str(x),
+    }
+
+    let mut wol_mac_addr: String = String::new();
+    match resp_json["wol-mac-addr"].as_str() {
+        None => wol_mac_addr.push_str("None"),
+        Some(x) => wol_mac_addr.push_str(x),
+    }
+
+
+
+    let conn_parameters: [String; 7] = [hostname, port, username, domain, ignore_cert, wol_send_packet, wol_mac_addr];
     return Ok(conn_parameters);
 }
 

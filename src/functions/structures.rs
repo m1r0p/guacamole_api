@@ -43,6 +43,9 @@ pub struct GuaRDPattributes {
     pub username: String,
     pub domain: String,
     pub ignore_cert: String,
+    pub wol_send_packet: String,
+    pub wol_mac_addr: String,
+
 }
 
 #[derive(Debug)]
