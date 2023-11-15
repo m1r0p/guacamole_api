@@ -46,9 +46,10 @@ fn main() {
             //println!("{:?}", conn_det);
             if i.protocol == "rdp" {
                 if !sccm_host_names.contains(&i.name) {
-                    println!("DELETING CONNECTION");
-                    println!("{}", &i.name);
-                    _ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
+                    //println!("DELETING CONNECTION");
+                    //println!("{}", &i.name);
+                    //_ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
+                    continue;
                 } else {
                     println!("UPDATING EXISTENT CONNECTION");
                     for j in sccm_hosts.iter() {
