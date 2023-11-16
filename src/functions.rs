@@ -1,4 +1,5 @@
-#[allow(dead_code)]
+#![allow(dead_code)]
+
 pub mod conf;
 pub use conf::{GUA_REST_CONNECTIONS, GUA_REST_TOKENS};
 pub mod structures;
