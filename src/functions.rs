@@ -563,7 +563,7 @@ pub async fn get_gua_conn_groups(
     let raw_json: Value = serde_json::from_str(resp.as_str()).unwrap();
     let conn_obj_json: &Map<String, Value> = raw_json.as_object().unwrap();
     for raw_conn in conn_obj_json.values() {
-        let attributes: GuaConnAttributes = GuaConnAttributes {
+        let attributes: GuaConnGrpAttributes = GuaConnGrpAttributes {
             failover_only: raw_conn["attributes"]["failover-only"].to_string(),
             guacd_encryption: raw_conn["attributes"]["guacd-encryption"].to_string(),
             guacd_hostname: raw_conn["attributes"]["guacd-hostname"].to_string(),
@@ -637,7 +637,7 @@ pub async fn get_gua_conn_groups(
         }
     }
 
-    return Ok(conn_list);
+    return Ok(conn_group_list);
 }
 
 
