@@ -45,7 +45,6 @@ pub struct GuaRDPattributes {
     pub ignore_cert: String,
     pub wol_send_packet: String,
     pub wol_mac_addr: String,
-
 }
 
 #[derive(Debug)]
@@ -67,6 +66,3 @@ pub struct GuaConnGrp {
     pub active_connections: u64,
     pub attributes: GuaConnGrpAttributes,
 }
-
-
-

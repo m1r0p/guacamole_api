@@ -78,12 +78,11 @@ fn main() {
             _ = create_gua_connection(&vec_config[1], &token, &i);
         }
     }
-    
+
     let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[1], &token).unwrap();
     for i in conn_grp_list.iter() {
         println!("{}", &i.attributes.enable_session_affinity);
     }
-
 
     // deleting token for this session (cleaning)
     _ = delete_gua_token(&vec_config[1], &token);

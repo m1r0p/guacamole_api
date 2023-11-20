@@ -1,10 +1,13 @@
 #![allow(dead_code)]
 
 pub mod conf;
-pub use conf::{GUA_REST_CONNECTIONS, GUA_REST_TOKENS, GUA_REST_CONN_GROUPS};
+pub use conf::{GUA_REST_CONNECTIONS, GUA_REST_CONN_GROUPS, GUA_REST_TOKENS};
 pub mod structures;
 pub use structures::enums::ProtoBasedAttributes;
-pub use structures::{GuaConn, GuaConnAttributes, GuaRDPattributes, GuaVNCattributes, SccmHost, GuaConnGrpAttributes, GuaConnGrp};
+pub use structures::{
+    GuaConn, GuaConnAttributes, GuaConnGrp, GuaConnGrpAttributes, GuaRDPattributes,
+    GuaVNCattributes, SccmHost,
+};
 
 use config::{Config, File, FileFormat};
 use csv;
@@ -240,9 +243,15 @@ pub async fn get_gua_connection_details(
         Some(x) => wol_mac_addr.push_str(x),
     }
 
-
-
-    let conn_parameters: [String; 7] = [hostname, port, username, domain, ignore_cert, wol_send_packet, wol_mac_addr];
+    let conn_parameters: [String; 7] = [
+        hostname,
+        port,
+        username,
+        domain,
+        ignore_cert,
+        wol_send_packet,
+        wol_mac_addr,
+    ];
     return Ok(conn_parameters);
 }
 
@@ -287,94 +296,94 @@ pub async fn create_gua_connection(
 
     let request_data = format!(
         r#"{{"parentIdentifier": "ROOT",
-"name": "{}",
-"protocol": "rdp",
-"parameters": {{
-"port": "3389",
-"read-only": "",
-"swap-red-blue": "",
-"cursor": "",
-"color-depth": "",
-"clipboard-encoding": "",
-"disable-copy": "",
-"disable-paste": "",
-"dest-port": "",
-"recording-exclude-output": "",
-"recording-exclude-mouse": "",
-"recording-include-keys": "",
-"create-recording-path": "",
-"enable-sftp": "",
-"sftp-port": "",
-"sftp-server-alive-interval": "",
-"enable-audio": "",
-"security": "",
-"disable-auth": "",
-"ignore-cert": "true",
-"gateway-port": "",
-"server-layout": "",
-"timezone": "",
-"console": "",
-"width": "",
-"height": "",
-"dpi": "",
-"resize-method": "",
-"console-audio": "",
-"disable-audio": "",
-"enable-audio-input": "",
-"enable-printing": "",
-"enable-drive": "",
-"create-drive-path": "",
-"enable-wallpaper": "",
-"enable-theming": "",
-"enable-font-smoothing": "",
-"enable-full-window-drag": "",
-"enable-desktop-composition": "",
-"enable-menu-animations": "",
-"disable-bitmap-caching": "",
-"disable-offscreen-caching": "",
-"disable-glyph-caching": "",
-"preconnection-id": "",
-"hostname": "{}",
-"username": "{}",
-"password": "",
-"domain": "developex",
-"gateway-hostname": "",
-"gateway-username": "",
-"gateway-password": "",
-"gateway-domain": "",
-"initial-program": "",
-"client-name": "",
-"printer-name": "",
-"drive-name": "",
-"drive-path": "",
-"static-channels": "",
-"remote-app": "",
-"remote-app-dir": "",
-"remote-app-args": "",
-"preconnection-blob": "",
-"load-balance-info": "",
-"recording-path": "",
-"recording-name": "",
-"sftp-hostname": "",
-"sftp-host-key": "",
-"sftp-username": "",
-"sftp-password": "",
-"sftp-private-key": "",
-"sftp-passphrase": "",
-"sftp-root-directory": "",
-"sftp-directory": "",
-"wol-send-packet": "true",
-"wol-mac-addr": "{}"
-}},"attributes": {{
-"max-connections": "",
-"max-connections-per-user": "",
-"weight": "",
-"failover-only": "",
-"guacd-port": "",
-"guacd-encryption": "",
-"guacd-hostname": ""
-}}
-    }}"#,
+    "name": "{}",
+    "protocol": "rdp",
+    "parameters": {{
+    "port": "3389",
+    "read-only": "",
+    "swap-red-blue": "",
+    "cursor": "",
+    "color-depth": "",
+    "clipboard-encoding": "",
+    "disable-copy": "",
+    "disable-paste": "",
+    "dest-port": "",
+    "recording-exclude-output": "",
+    "recording-exclude-mouse": "",
+    "recording-include-keys": "",
+    "create-recording-path": "",
+    "enable-sftp": "",
+    "sftp-port": "",
+    "sftp-server-alive-interval": "",
+    "enable-audio": "",
+    "security": "",
+    "disable-auth": "",
+    "ignore-cert": "true",
+    "gateway-port": "",
+    "server-layout": "",
+    "timezone": "",
+    "console": "",
+    "width": "",
+    "height": "",
+    "dpi": "",
+    "resize-method": "",
+    "console-audio": "",
+    "disable-audio": "",
+    "enable-audio-input": "",
+    "enable-printing": "",
+    "enable-drive": "",
+    "create-drive-path": "",
+    "enable-wallpaper": "",
+    "enable-theming": "",
+    "enable-font-smoothing": "",
+    "enable-full-window-drag": "",
+    "enable-desktop-composition": "",
+    "enable-menu-animations": "",
+    "disable-bitmap-caching": "",
+    "disable-offscreen-caching": "",
+    "disable-glyph-caching": "",
+    "preconnection-id": "",
+    "hostname": "{}",
+    "username": "{}",
+    "password": "",
+    "domain": "developex",
+    "gateway-hostname": "",
+    "gateway-username": "",
+    "gateway-password": "",
+    "gateway-domain": "",
+    "initial-program": "",
+    "client-name": "",
+    "printer-name": "",
+    "drive-name": "",
+    "drive-path": "",
+    "static-channels": "",
+    "remote-app": "",
+    "remote-app-dir": "",
+    "remote-app-args": "",
+    "preconnection-blob": "",
+    "load-balance-info": "",
+    "recording-path": "",
+    "recording-name": "",
+    "sftp-hostname": "",
+    "sftp-host-key": "",
+    "sftp-username": "",
+    "sftp-password": "",
+    "sftp-private-key": "",
+    "sftp-passphrase": "",
+    "sftp-root-directory": "",
+    "sftp-directory": "",
+    "wol-send-packet": "true",
+    "wol-mac-addr": "{}"
+    }},"attributes": {{
+    "max-connections": "",
+    "max-connections-per-user": "",
+    "weight": "",
+    "failover-only": "",
+    "guacd-port": "",
+    "guacd-encryption": "",
+    "guacd-hostname": ""
+    }}
+        }}"#,
         sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
     );
 
@@ -412,96 +421,113 @@ pub async fn update_gua_connection(
 
     let request_data = format!(
         r#"{{"parentIdentifier": "ROOT",
-"name": "{}",
-"protocol": "rdp",
-"parameters": {{
-"port": "3389",
-"read-only": "",
-"swap-red-blue": "",
-"cursor": "",
-"color-depth": "",
-"clipboard-encoding": "",
-"disable-copy": "",
-"disable-paste": "",
-"dest-port": "",
-"recording-exclude-output": "",
-"recording-exclude-mouse": "",
-"recording-include-keys": "",
-"create-recording-path": "",
-"enable-sftp": "",
-"sftp-port": "",
-"sftp-server-alive-interval": "",
-"enable-audio": "",
-"security": "",
-"disable-auth": "",
-"ignore-cert": "true",
-"gateway-port": "",
-"server-layout": "",
-"timezone": "",
-"console": "",
-"width": "",
-"height": "",
-"dpi": "",
-"resize-method": "",
-"console-audio": "",
-"disable-audio": "",
-"enable-audio-input": "",
-"enable-printing": "",
-"enable-drive": "",
-"create-drive-path": "",
-"enable-wallpaper": "",
-"enable-theming": "",
-"enable-font-smoothing": "",
-"enable-full-window-drag": "",
-"enable-desktop-composition": "",
-"enable-menu-animations": "",
-"disable-bitmap-caching": "",
-"disable-offscreen-caching": "",
-"disable-glyph-caching": "",
-"preconnection-id": "",
-"hostname": "{}",
-"username": "{}",
-"password": "",
-"domain": "developex",
-"gateway-hostname": "",
-"gateway-username": "",
-"gateway-password": "",
-"gateway-domain": "",
-"initial-program": "",
-"client-name": "",
-"printer-name": "",
-"drive-name": "",
-"drive-path": "",
-"static-channels": "",
-"remote-app": "",
-"remote-app-dir": "",
-"remote-app-args": "",
-"preconnection-blob": "",
-"load-balance-info": "",
-"recording-path": "",
-"recording-name": "",
-"sftp-hostname": "",
-"sftp-host-key": "",
-"sftp-username": "",
-"sftp-password": "",
-"sftp-private-key": "",
-"sftp-passphrase": "",
-"sftp-root-directory": "",
-"sftp-directory": "",
-"wol-send-packet": "true",
-"wol-mac-addr": "{}"
-}},"attributes": {{
-"max-connections": "",
-"max-connections-per-user": "",
-"weight": "",
-"failover-only": "",
-"guacd-port": "",
-"guacd-encryption": "",
-"guacd-hostname": ""
-}}
-    }}"#,
+    "name": "{}",
+    "protocol": "rdp",
+    "parameters": {{
+    "port": "3389",
+    "read-only": "",
+    "swap-red-blue": "",
+    "cursor": "",
+    "color-depth": "",
+    "clipboard-encoding": "",
+    "disable-copy": "",
+    "disable-paste": "",
+    "dest-port": "",
+    "recording-exclude-output": "",
+    "recording-exclude-mouse": "",
+    "recording-include-keys": "",
+    "create-recording-path": "",
+    "enable-sftp": "",
+    "sftp-port": "",
+    "sftp-server-alive-interval": "",
+    "enable-audio": "",
+    "security": "",
+    "disable-auth": "",
+    "ignore-cert": "true",
+    "gateway-port": "",
+    "server-layout": "",
+    "timezone": "",
+    "console": "",
+    "width": "",
+    "height": "",
+    "dpi": "",
+    "resize-method": "",
+    "console-audio": "",
+    "disable-audio": "",
+    "enable-audio-input": "",
+    "enable-printing": "",
+    "enable-drive": "",
+    "create-drive-path": "",
+    "enable-wallpaper": "",
+    "enable-theming": "",
+    "enable-font-smoothing": "",
+    "enable-full-window-drag": "",
+    "enable-desktop-composition": "",
+    "enable-menu-animations": "",
+    "disable-bitmap-caching": "",
+    "disable-offscreen-caching": "",
+    "disable-glyph-caching": "",
+    "preconnection-id": "",
+    "hostname": "{}",
+    "username": "{}",
+    "password": "",
+    "domain": "developex",
+    "gateway-hostname": "",
+    "gateway-username": "",
+    "gateway-password": "",
+    "gateway-domain": "",
+    "initial-program": "",
+    "client-name": "",
+    "printer-name": "",
+    "drive-name": "",
+    "drive-path": "",
+    "static-channels": "",
+    "remote-app": "",
+    "remote-app-dir": "",
+    "remote-app-args": "",
+    "preconnection-blob": "",
+    "load-balance-info": "",
+    "recording-path": "",
+    "recording-name": "",
+    "sftp-hostname": "",
+    "sftp-host-key": "",
+    "sftp-username": "",
+    "sftp-password": "",
+    "sftp-private-key": "",
+    "sftp-passphrase": "",
+    "sftp-root-directory": "",
+    "sftp-directory": "",
+    "wol-send-packet": "true",
+    "wol-mac-addr": "{}"
+    }},"attributes": {{
+    "max-connections": "",
+    "max-connections-per-user": "",
+    "weight": "",
+    "failover-only": "",
+    "guacd-port": "",
+    "guacd-encryption": "",
+    "guacd-hostname": ""
+    }}
+        }}"#,
         sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
     );
+
+    //    let request_data = format!(
+    //        r#"{{"parentIdentifier": "ROOT",
+    //"name": "{}",
+    //"protocol": "rdp",
+    //"parameters": {{
+    //"port": "3389",
+    //"ignore-cert": "true",
+    //"hostname": "{}",
+    //"username": "{}",
+    //"domain": "developex",
+    //"wol-send-packet": "true",
+    //"wol-mac-addr": "{}"
+    //}}
+    //}}"#,
+    //        sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
+    //    );
 
     let client = reqwest::Client::new();
 
@@ -563,7 +589,6 @@ pub async fn get_gua_conn_groups(
     let raw_json: Value = serde_json::from_str(resp.as_str()).unwrap();
     let conn_obj_json: &Map<String, Value> = raw_json.as_object().unwrap();
     for raw_conn in conn_obj_json.values() {
-
         //let mut enable_session_affinity: String = String::new();
         //match raw_conn["attributes"]["enable-session-affinity"].as_str() {
         //    None => enable_session_affinity.push_str("None"),
@@ -572,11 +597,11 @@ pub async fn get_gua_conn_groups(
 
         let attributes: GuaConnGrpAttributes = GuaConnGrpAttributes {
             max_connections: raw_conn["attributes"]["max-connections"].to_string(),
-            max_connections_per_user: raw_conn["attributes"]["max-connections-per-user"].to_string(),
+            max_connections_per_user: raw_conn["attributes"]["max-connections-per-user"]
+                .to_string(),
             //enable_session_affinity: enable_session_affinity,
             enable_session_affinity: raw_conn["attributes"]["enable-session-affinity"].to_string(),
         };
-
 
         let conn_grp: GuaConnGrp = GuaConnGrp {
             name: raw_conn["name"].as_str().unwrap().to_string(),
@@ -588,10 +613,7 @@ pub async fn get_gua_conn_groups(
         };
 
         conn_group_list.push(conn_grp);
-
-     }
+    }
 
     return Ok(conn_group_list);
 }
-
-
