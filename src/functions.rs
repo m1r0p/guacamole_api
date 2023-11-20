@@ -387,6 +387,23 @@ pub async fn create_gua_connection(
         sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
     );
 
+    //let request_data = format!(
+    //    r#"{{"parentIdentifier": "ROOT",
+    //"name": "{}",
+    //"protocol": "rdp",
+    //"parameters": {{
+    //"port": "3389",
+    //"ignore-cert": "true",
+    //"hostname": "{}",
+    //"username": "{}",
+    //"domain": "developex",
+    //"wol-send-packet": "true",
+    //"wol-mac-addr": "{}"
+    //}}
+    //}}"#,
+    //    sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
+    //);
+
     let client = reqwest::Client::new();
 
     let _resp = client
