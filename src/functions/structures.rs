@@ -52,20 +52,20 @@ pub struct GuaRDPattributes {
 pub struct GuaVNCattributes {}
 
 #[derive(Debug)]
-pub struct GuaGrpAttributes {
+pub struct GuaConnGrpAttributes {
     pub max_connections: String,
     pub max_connections_per_user: String,
     pub enable_session_affinity: String,
 }
 
 #[derive(Debug)]
-pub struct GuaGrp {
+pub struct GuaConnGrp {
     pub name: String,
     pub identifier: String,
     pub parent_identifier: String,
     pub grp_type: String,
     pub active_connections: u64,
-    pub attributes: GuaGrpAttributes,
+    pub attributes: GuaConnGrpAttributes,
 }
 
 

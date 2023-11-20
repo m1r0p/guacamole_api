@@ -4,7 +4,7 @@ pub mod conf;
 pub use conf::{GUA_REST_CONNECTIONS, GUA_REST_TOKENS, GUA_REST_CONN_GROUPS};
 pub mod structures;
 pub use structures::enums::ProtoBasedAttributes;
-pub use structures::{GuaConn, GuaConnAttributes, GuaRDPattributes, GuaVNCattributes, SccmHost};
+pub use structures::{GuaConn, GuaConnAttributes, GuaRDPattributes, GuaVNCattributes, SccmHost, GuaConnGrpAttributes, GuaConnGrp};
 
 use config::{Config, File, FileFormat};
 use csv;
@@ -541,7 +541,7 @@ pub async fn get_gua_conn_groups(
     gua_address: &String,
     gua_token: &String,
 ) -> Result<Vec<GuaConn>, Box<dyn Error>> {
-    let mut group_list: Vec<GuaGrp> = Vec::new();
+    let mut conn_group_list: Vec<GuaConnGrp> = Vec::new();
     let addr: String = gua_address.clone();
     let tkn: String = gua_token.clone();
     let gua_addr: Arc<String> = Arc::new(addr);
