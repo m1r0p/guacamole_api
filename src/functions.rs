@@ -624,11 +624,10 @@ pub async fn create_gua_conn_group(
     gua_token: &String,
     sccm_host: &SccmHost,
 ) -> Result<(), Box<dyn Error>> {
-
     let mut headers = HeaderMap::new();
     headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
 
-    let test_name: String = String::from("test_grp1");
+    //let test_name: String = String::from("test_grp1");
 
     let request_data = format!(
         r#"{{"parentIdentifier": "ROOT",
@@ -640,8 +639,7 @@ pub async fn create_gua_conn_group(
     "enable-session-affinity": ""
     }}
         }}"#,
-        //sccm_host.hostname
-        test_name
+        sccm_host.hostname //test_name
     );
 
     let client = reqwest::Client::new();
@@ -660,4 +658,3 @@ pub async fn create_gua_conn_group(
 
     return Ok(());
 }
-
