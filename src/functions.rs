@@ -280,6 +280,7 @@ pub async fn create_gua_connection(
     gua_address: &String,
     gua_token: &String,
     sccm_host: &SccmHost,
+    conn_grp_id: &String,
 ) -> Result<(), Box<dyn Error>> {
     let mut conn_user: String = String::new();
     //if sccm_host.username != "NO USER" {
@@ -295,7 +296,8 @@ pub async fn create_gua_connection(
     headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
 
     let request_data = format!(
-        r#"{{"parentIdentifier": "ROOT",
+        r#"{{
+    "parentIdentifier": "{}",
     "name": "{}",
     "protocol": "rdp",
     "parameters": {{
@@ -384,7 +386,7 @@ pub async fn create_gua_connection(
     "guacd-hostname": ""
     }}
         }}"#,
-        sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
+        conn_grp_id, sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
     );
 
     let client = reqwest::Client::new();
@@ -410,6 +412,7 @@ pub async fn update_gua_connection(
     gua_token: &String,
     sccm_host: &SccmHost,
     conn_id: &String,
+    conn_grp_id: &String,
 ) -> Result<(), Box<dyn Error>> {
     let mut conn_user: String = String::new();
     if sccm_host.username != "no user" {
@@ -420,7 +423,8 @@ pub async fn update_gua_connection(
     headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
 
     let request_data = format!(
-        r#"{{"parentIdentifier": "ROOT",
+        r#"{{
+    "parentIdentifier": "{}",
     "name": "{}",
     "protocol": "rdp",
     "parameters": {{
@@ -509,7 +513,7 @@ pub async fn update_gua_connection(
     "guacd-hostname": ""
     }}
         }}"#,
-        sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
+        conn_grp_id, sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
     );
 
     //let request_data = format!(
@@ -622,7 +626,7 @@ pub async fn get_gua_conn_groups(
 pub async fn create_gua_conn_group(
     gua_address: &String,
     gua_token: &String,
-    sccm_host: &SccmHost,
+    gua_conn_grp_name: &String,
 ) -> Result<(), Box<dyn Error>> {
     let mut headers = HeaderMap::new();
     headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
@@ -639,7 +643,7 @@ pub async fn create_gua_conn_group(
     "enable-session-affinity": ""
     }}
         }}"#,
-        sccm_host.hostname //test_name
+        gua_conn_grp_name
     );
 
     let client = reqwest::Client::new();
