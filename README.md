@@ -1,4 +1,4 @@
-# This scrtipt can interact with Apache Guacamole REST API
+# This script can interact with Apache Guacamole REST API
 
 ## Installation
 
