@@ -1,15 +1,16 @@
 #![allow(dead_code)]
 
-pub mod conf;
-pub use conf::{GUA_REST_CONNECTIONS, GUA_REST_CONN_GROUPS, GUA_REST_TOKENS, GUA_REST_USERS};
-pub mod structures;
-pub use structures::enums::ProtoBasedAttributes;
-pub use structures::{
+mod get_config_params;
+pub use get_config_params::get_config_params;
+
+pub use crate::conf::{GUA_REST_CONNECTIONS, GUA_REST_CONN_GROUPS, GUA_REST_TOKENS, GUA_REST_USERS};
+pub use crate::enums::ProtoBasedAttributes;
+pub use crate::structures::{
     GuaConn, GuaConnAttributes, GuaConnGrp, GuaConnGrpAttributes, GuaRDPattributes,
     GuaVNCattributes, SccmHost,
 };
 
-use config::{Config, File, FileFormat};
+//use config::{Config, File, FileFormat};
 use csv;
 use reqwest::header::{HeaderMap, CONTENT_TYPE};
 use serde_json::{Map, Value};
@@ -21,21 +22,21 @@ use std::sync::Arc;
 //    println!("{}", std::any::type_name::<T>())
 //}
 
-pub fn get_config_params(string_path: String) -> Result<Vec<String>, Box<dyn Error>> {
-    let mut config_params: Vec<String> = Vec::new();
-
-    let mut builder = Config::builder();
-    builder = builder.set_default("default", "1")?;
-    builder = builder.add_source(File::new(&string_path, FileFormat::Json));
-    builder = builder.set_override("override", "1")?;
-    let raw_conf = builder.build().unwrap();
-    config_params.push(raw_conf.get("csv_input_file").unwrap());
-    config_params.push(raw_conf.get("gua_proto_address").unwrap());
-    config_params.push(raw_conf.get("gua_user").unwrap());
-    config_params.push(raw_conf.get("gua_pass").unwrap());
-
-    return Ok(config_params);
-}
+//pub fn get_config_params(string_path: String) -> Result<Vec<String>, Box<dyn Error>> {
+//    let mut config_params: Vec<String> = Vec::new();
+//
+//    let mut builder = Config::builder();
+//    builder = builder.set_default("default", "1")?;
+//    builder = builder.add_source(File::new(&string_path, FileFormat::Json));
+//    builder = builder.set_override("override", "1")?;
+//    let raw_conf = builder.build().unwrap();
+//    config_params.push(raw_conf.get("csv_input_file").unwrap());
+//    config_params.push(raw_conf.get("gua_proto_address").unwrap());
+//    config_params.push(raw_conf.get("gua_user").unwrap());
+//    config_params.push(raw_conf.get("gua_pass").unwrap());
+//
+//    return Ok(config_params);
+//}
 
 pub fn parse_csv(csv_path: &String) -> Result<Vec<SccmHost>, Box<dyn Error>> {
     let mut gua_connections: Vec<SccmHost> = Vec::new();

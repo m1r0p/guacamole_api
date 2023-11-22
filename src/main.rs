@@ -1,5 +1,9 @@
+mod conf;
 mod functions;
+mod structures;
+mod enums;
 use functions::*;
+
 
 use std::env;
 

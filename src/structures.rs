@@ -1,6 +1,5 @@
 //////// structures
-pub mod enums;
-pub use enums::ProtoBasedAttributes;
+pub use crate::enums::ProtoBasedAttributes;
 
 #[allow(dead_code)]
 use serde::Deserialize;
