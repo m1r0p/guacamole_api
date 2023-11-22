@@ -126,12 +126,25 @@ fn main() {
     let connections: Vec<GuaConn> = get_gua_connections(&vec_config[1], &token).unwrap();
 
     for conn in connections.iter() {
-        //match
-        if conn.username.as_str() != "None" {
-            _ = assign_gua_user_to_conn(&vec_config[1], &token, &conn);
-        } else {
-            continue;
+        match &conn.proto_based_attributes {
+            ProtoBasedAttributes::RDP(x) => {
+                if x.username.as_str() != "None" {
+                    println!("ASSIGN {} to {}", &conn.name, &x.username);
+                    _ = assign_gua_user_to_conn(&vec_config[1], &token, &conn);
+                } else {
+                    println!("SKIPING ASSIGN FOR USER {}", &x.username);
+                    continue;
+                }
+                //println!("{:?}", x.username);
+            },
+
+            _ => continue,
         }
+        //if conn.username.as_str() != "None" {
+        //    _ = assign_gua_user_to_conn(&vec_config[1], &token, &conn);
+        //} else {
+        //    continue;
+        //}
 
         //match &conn.proto_based_attributes {
         //    ProtoBasedAttributes::RDP(x) => println!("{:?}", x.username),
