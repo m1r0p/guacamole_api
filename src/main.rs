@@ -2,7 +2,14 @@ mod conf;
 mod functions;
 mod structures;
 mod enums;
-use functions::*;
+
+///// functions attaching
+use crate::functions::get_config_params::*;
+use crate::functions::parse_csv::*;
+use crate::functions::create_gua_token::*;
+use crate::functions::get_gua_connections::*;
+
+//use functions::*;
 
 
 use std::env;
