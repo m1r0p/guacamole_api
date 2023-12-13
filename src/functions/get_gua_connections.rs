@@ -1,8 +1,10 @@
 ///// local modules
-pub use crate::conf::{GUA_REST_CONNECTIONS};
-pub use crate::structures::guaconn::{GuaConn, GuaConnAttributes, GuaConnGrpAttributes, GuaRDPattributes,
-    GuaVNCattributes,};
+pub use crate::conf::GUA_REST_CONNECTIONS;
+pub use crate::enums::ProtoBasedAttributes;
 pub use crate::functions::get_gua_connection_details::*;
+pub use crate::structures::guaconn::{
+    GuaConn, GuaConnAttributes, GuaConnGrpAttributes, GuaRDPattributes, GuaVNCattributes,
+};
 
 ///// external crates
 //use reqwest::header::{HeaderMap, CONTENT_TYPE};

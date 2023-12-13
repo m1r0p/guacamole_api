@@ -1,15 +1,23 @@
 #![allow(dead_code)]
 
-pub mod get_config_params;
-pub mod parse_csv;
+pub mod assign_gua_user_to_conn;
+pub mod create_gua_conn_group;
+pub mod create_gua_connection;
 pub mod create_gua_token;
+pub mod delete_gua_connection;
+pub mod delete_gua_token;
+pub mod get_config_params;
+pub mod get_gua_conn_groups;
 pub mod get_gua_connection_details;
 pub mod get_gua_connections;
+pub mod parse_csv;
+pub mod update_gua_connection;
 
 //pub use get_config_params::get_config_params;
 
-
-pub use crate::conf::{GUA_REST_CONNECTIONS, GUA_REST_CONN_GROUPS, GUA_REST_TOKENS, GUA_REST_USERS};
+pub use crate::conf::{
+    GUA_REST_CONNECTIONS, GUA_REST_CONN_GROUPS, GUA_REST_TOKENS, GUA_REST_USERS,
+};
 pub use crate::enums::ProtoBasedAttributes;
 pub use crate::structures::{
     GuaConn, GuaConnAttributes, GuaConnGrp, GuaConnGrpAttributes, GuaRDPattributes,
@@ -262,460 +270,460 @@ use std::sync::Arc;
 //    return Ok(conn_parameters);
 //}
 
-#[tokio::main]
-pub async fn delete_gua_connection(
-    gua_address: &String,
-    gua_token: &String,
-    conn_id: &String,
-) -> Result<(), Box<dyn Error>> {
-    let client = reqwest::Client::new();
+//#[tokio::main]
+//pub async fn delete_gua_connection(
+//    gua_address: &String,
+//    gua_token: &String,
+//    conn_id: &String,
+//) -> Result<(), Box<dyn Error>> {
+//    let client = reqwest::Client::new();
+//
+//    let _resp = client
+//        .delete(format!(
+//            "{}{}/{}?token={}",
+//            gua_address, GUA_REST_CONNECTIONS, conn_id, gua_token
+//        ))
+//        .send()
+//        .await?
+//        .text()
+//        .await?;
+//    return Ok(());
+//}
 
-    let _resp = client
-        .delete(format!(
-            "{}{}/{}?token={}",
-            gua_address, GUA_REST_CONNECTIONS, conn_id, gua_token
-        ))
-        .send()
-        .await?
-        .text()
-        .await?;
-    return Ok(());
-}
+//#[tokio::main]
+//pub async fn create_gua_connection(
+//    gua_address: &String,
+//    gua_token: &String,
+//    sccm_host: &Host,
+//    conn_grp_id: &String,
+//) -> Result<(), Box<dyn Error>> {
+//    let mut conn_user: String = String::new();
+//    //if sccm_host.username != "NO USER" {
+//    //    let vec_user: &Vec<&str> = &sccm_host.username.split("\\").collect();
+//    //    conn_user = format!("{}\\\\{}", vec_user[0], vec_user[1]);
+//    //}
+//    if sccm_host.username != "no user" {
+//        //let vec_user: &Vec<&str> = &sccm_host.username.split("\\").collect();
+//        conn_user = sccm_host.username.clone();
+//    }
+//
+//    let mut headers = HeaderMap::new();
+//    headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
+//
+//    let conn_grp_id: String = String::from("ROOT");
+//
+//    let request_data = format!(
+//        r#"{{
+//    "parentIdentifier": "{}",
+//    "name": "{}",
+//    "protocol": "rdp",
+//    "parameters": {{
+//    "port": "3389",
+//    "read-only": "",
+//    "swap-red-blue": "",
+//    "cursor": "",
+//    "color-depth": "",
+//    "clipboard-encoding": "",
+//    "disable-copy": "",
+//    "disable-paste": "",
+//    "dest-port": "",
+//    "recording-exclude-output": "",
+//    "recording-exclude-mouse": "",
+//    "recording-include-keys": "",
+//    "create-recording-path": "",
+//    "enable-sftp": "",
+//    "sftp-port": "",
+//    "sftp-server-alive-interval": "",
+//    "enable-audio": "",
+//    "security": "",
+//    "disable-auth": "",
+//    "ignore-cert": "true",
+//    "gateway-port": "",
+//    "server-layout": "",
+//    "timezone": "",
+//    "console": "",
+//    "width": "",
+//    "height": "",
+//    "dpi": "",
+//    "resize-method": "",
+//    "console-audio": "",
+//    "disable-audio": "",
+//    "enable-audio-input": "",
+//    "enable-printing": "",
+//    "enable-drive": "",
+//    "create-drive-path": "",
+//    "enable-wallpaper": "",
+//    "enable-theming": "",
+//    "enable-font-smoothing": "",
+//    "enable-full-window-drag": "",
+//    "enable-desktop-composition": "",
+//    "enable-menu-animations": "",
+//    "disable-bitmap-caching": "",
+//    "disable-offscreen-caching": "",
+//    "disable-glyph-caching": "",
+//    "preconnection-id": "",
+//    "hostname": "{}",
+//    "username": "{}",
+//    "password": "",
+//    "domain": "developex",
+//    "gateway-hostname": "",
+//    "gateway-username": "",
+//    "gateway-password": "",
+//    "gateway-domain": "",
+//    "initial-program": "",
+//    "client-name": "",
+//    "printer-name": "",
+//    "drive-name": "",
+//    "drive-path": "",
+//    "static-channels": "",
+//    "remote-app": "",
+//    "remote-app-dir": "",
+//    "remote-app-args": "",
+//    "preconnection-blob": "",
+//    "load-balance-info": "",
+//    "recording-path": "",
+//    "recording-name": "",
+//    "sftp-hostname": "",
+//    "sftp-host-key": "",
+//    "sftp-username": "",
+//    "sftp-password": "",
+//    "sftp-private-key": "",
+//    "sftp-passphrase": "",
+//    "sftp-root-directory": "",
+//    "sftp-directory": "",
+//    "wol-send-packet": "true",
+//    "wol-mac-addr": "{}"
+//    }},"attributes": {{
+//    "max-connections": "",
+//    "max-connections-per-user": "",
+//    "weight": "",
+//    "failover-only": "",
+//    "guacd-port": "",
+//    "guacd-encryption": "",
+//    "guacd-hostname": ""
+//    }}
+//        }}"#,
+//        conn_grp_id, sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
+//    );
+//
+//    let client = reqwest::Client::new();
+//
+//    let _resp = client
+//        .post(format!(
+//            "{}{}?token={}",
+//            gua_address, GUA_REST_CONNECTIONS, gua_token
+//        ))
+//        .headers(headers.clone())
+//        .body(request_data)
+//        .send()
+//        .await?
+//        .text()
+//        .await?;
+//
+//    return Ok(());
+//}
 
-#[tokio::main]
-pub async fn create_gua_connection(
-    gua_address: &String,
-    gua_token: &String,
-    sccm_host: &SccmHost,
-    conn_grp_id: &String,
-) -> Result<(), Box<dyn Error>> {
-    let mut conn_user: String = String::new();
-    //if sccm_host.username != "NO USER" {
-    //    let vec_user: &Vec<&str> = &sccm_host.username.split("\\").collect();
-    //    conn_user = format!("{}\\\\{}", vec_user[0], vec_user[1]);
-    //}
-    if sccm_host.username != "no user" {
-        //let vec_user: &Vec<&str> = &sccm_host.username.split("\\").collect();
-        conn_user = sccm_host.username.clone();
-    }
+//#[tokio::main]
+//pub async fn update_gua_connection(
+//    gua_address: &String,
+//    gua_token: &String,
+//    sccm_host: &SccmHost,
+//    conn_id: &String,
+//    conn_grp_id: &String,
+//) -> Result<(), Box<dyn Error>> {
+//    let mut conn_user: String = String::new();
+//    if sccm_host.username != "no user" {
+//        conn_user = sccm_host.username.clone();
+//    }
+//
+//    let conn_grp_id: String = String::from("ROOT");
+//
+//    let mut headers = HeaderMap::new();
+//    headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
+//
+//    let request_data = format!(
+//        r#"{{
+//    "parentIdentifier": "{}",
+//    "name": "{}",
+//    "protocol": "rdp",
+//    "parameters": {{
+//    "port": "3389",
+//    "read-only": "",
+//    "swap-red-blue": "",
+//    "cursor": "",
+//    "color-depth": "",
+//    "clipboard-encoding": "",
+//    "disable-copy": "",
+//    "disable-paste": "",
+//    "dest-port": "",
+//    "recording-exclude-output": "",
+//    "recording-exclude-mouse": "",
+//    "recording-include-keys": "",
+//    "create-recording-path": "",
+//    "enable-sftp": "",
+//    "sftp-port": "",
+//    "sftp-server-alive-interval": "",
+//    "enable-audio": "",
+//    "security": "",
+//    "disable-auth": "",
+//    "ignore-cert": "true",
+//    "gateway-port": "",
+//    "server-layout": "",
+//    "timezone": "",
+//    "console": "",
+//    "width": "",
+//    "height": "",
+//    "dpi": "",
+//    "resize-method": "",
+//    "console-audio": "",
+//    "disable-audio": "",
+//    "enable-audio-input": "",
+//    "enable-printing": "",
+//    "enable-drive": "",
+//    "create-drive-path": "",
+//    "enable-wallpaper": "",
+//    "enable-theming": "",
+//    "enable-font-smoothing": "",
+//    "enable-full-window-drag": "",
+//    "enable-desktop-composition": "",
+//    "enable-menu-animations": "",
+//    "disable-bitmap-caching": "",
+//    "disable-offscreen-caching": "",
+//    "disable-glyph-caching": "",
+//    "preconnection-id": "",
+//    "hostname": "{}",
+//    "username": "{}",
+//    "password": "",
+//    "domain": "developex",
+//    "gateway-hostname": "",
+//    "gateway-username": "",
+//    "gateway-password": "",
+//    "gateway-domain": "",
+//    "initial-program": "",
+//    "client-name": "",
+//    "printer-name": "",
+//    "drive-name": "",
+//    "drive-path": "",
+//    "static-channels": "",
+//    "remote-app": "",
+//    "remote-app-dir": "",
+//    "remote-app-args": "",
+//    "preconnection-blob": "",
+//    "load-balance-info": "",
+//    "recording-path": "",
+//    "recording-name": "",
+//    "sftp-hostname": "",
+//    "sftp-host-key": "",
+//    "sftp-username": "",
+//    "sftp-password": "",
+//    "sftp-private-key": "",
+//    "sftp-passphrase": "",
+//    "sftp-root-directory": "",
+//    "sftp-directory": "",
+//    "wol-send-packet": "true",
+//    "wol-mac-addr": "{}"
+//    }},"attributes": {{
+//    "max-connections": "",
+//    "max-connections-per-user": "",
+//    "weight": "",
+//    "failover-only": "",
+//    "guacd-port": "",
+//    "guacd-encryption": "",
+//    "guacd-hostname": ""
+//    }}
+//        }}"#,
+//        conn_grp_id, sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
+//    );
+//
+//    //let request_data = format!(
+//    //    r#"{{"parentIdentifier": "ROOT",
+//    //"name": "{}",
+//    //"protocol": "rdp",
+//    //"parameters": {{
+//    //"port": "3389",
+//    //"ignore-cert": "true",
+//    //"hostname": "{}",
+//    //"username": "{}",
+//    //"domain": "developex",
+//    //"wol-send-packet": "true",
+//    //"wol-mac-addr": "{}"
+//    //}}
+//    //}}"#,
+//    //    sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
+//    //);
+//
+//    let client = reqwest::Client::new();
+//
+//    let _resp = client
+//        .put(format!(
+//            "{}{}/{}?token={}",
+//            gua_address, GUA_REST_CONNECTIONS, conn_id, gua_token
+//        ))
+//        .headers(headers.clone())
+//        .body(request_data)
+//        .send()
+//        .await?
+//        .text()
+//        .await?;
+//
+//    return Ok(());
+//}
 
-    let mut headers = HeaderMap::new();
-    headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
+//#[tokio::main]
+//pub async fn delete_gua_token(
+//    gua_address: &String,
+//    gua_token: &String,
+//) -> Result<(), Box<dyn Error>> {
+//    let client = reqwest::Client::new();
+//
+//    let _resp = client
+//        .delete(format!("{}{}/{}", gua_address, GUA_REST_TOKENS, gua_token))
+//        .send()
+//        .await?
+//        .text()
+//        .await?;
+//    return Ok(());
+//}
 
-    let conn_grp_id: String = String::from("ROOT");
+//#[tokio::main]
+//pub async fn get_gua_conn_groups(
+//    gua_address: &String,
+//    gua_token: &String,
+//) -> Result<Vec<GuaConnGrp>, Box<dyn Error>> {
+//    let mut conn_group_list: Vec<GuaConnGrp> = Vec::new();
+//    let addr: String = gua_address.clone();
+//    let tkn: String = gua_token.clone();
+//    let gua_addr: Arc<String> = Arc::new(addr);
+//    let gua_tkn: Arc<String> = Arc::new(tkn);
+//
+//    let client = reqwest::Client::new();
+//
+//    let resp = client
+//        .get(format!(
+//            "{}{}?token={}",
+//            gua_addr.clone(),
+//            GUA_REST_CONN_GROUPS,
+//            gua_tkn.clone()
+//        ))
+//        .send()
+//        .await?
+//        .text()
+//        .await?;
+//    let raw_json: Value = serde_json::from_str(resp.as_str()).unwrap();
+//    let conn_obj_json: &Map<String, Value> = raw_json.as_object().unwrap();
+//    for raw_conn in conn_obj_json.values() {
+//        //let mut enable_session_affinity: String = String::new();
+//        //match raw_conn["attributes"]["enable-session-affinity"].as_str() {
+//        //    None => enable_session_affinity.push_str("None"),
+//        //    Some(x) => enable_session_affinity.push_str(x),
+//        //}
+//
+//        let attributes: GuaConnGrpAttributes = GuaConnGrpAttributes {
+//            max_connections: raw_conn["attributes"]["max-connections"].to_string(),
+//            max_connections_per_user: raw_conn["attributes"]["max-connections-per-user"]
+//                .to_string(),
+//            //enable_session_affinity: enable_session_affinity,
+//            enable_session_affinity: raw_conn["attributes"]["enable-session-affinity"].to_string(),
+//        };
+//
+//        let conn_grp: GuaConnGrp = GuaConnGrp {
+//            name: raw_conn["name"].as_str().unwrap().to_string(),
+//            identifier: raw_conn["identifier"].as_str().unwrap().to_string(),
+//            parent_identifier: raw_conn["parentIdentifier"].as_str().unwrap().to_string(),
+//            conn_grp_type: raw_conn["type"].as_str().unwrap().to_string(),
+//            active_connections: raw_conn["activeConnections"].as_u64().unwrap(),
+//            attributes: attributes,
+//        };
+//
+//        conn_group_list.push(conn_grp);
+//    }
+//
+//    return Ok(conn_group_list);
+//}
 
-    let request_data = format!(
-        r#"{{
-    "parentIdentifier": "{}",
-    "name": "{}",
-    "protocol": "rdp",
-    "parameters": {{
-    "port": "3389",
-    "read-only": "",
-    "swap-red-blue": "",
-    "cursor": "",
-    "color-depth": "",
-    "clipboard-encoding": "",
-    "disable-copy": "",
-    "disable-paste": "",
-    "dest-port": "",
-    "recording-exclude-output": "",
-    "recording-exclude-mouse": "",
-    "recording-include-keys": "",
-    "create-recording-path": "",
-    "enable-sftp": "",
-    "sftp-port": "",
-    "sftp-server-alive-interval": "",
-    "enable-audio": "",
-    "security": "",
-    "disable-auth": "",
-    "ignore-cert": "true",
-    "gateway-port": "",
-    "server-layout": "",
-    "timezone": "",
-    "console": "",
-    "width": "",
-    "height": "",
-    "dpi": "",
-    "resize-method": "",
-    "console-audio": "",
-    "disable-audio": "",
-    "enable-audio-input": "",
-    "enable-printing": "",
-    "enable-drive": "",
-    "create-drive-path": "",
-    "enable-wallpaper": "",
-    "enable-theming": "",
-    "enable-font-smoothing": "",
-    "enable-full-window-drag": "",
-    "enable-desktop-composition": "",
-    "enable-menu-animations": "",
-    "disable-bitmap-caching": "",
-    "disable-offscreen-caching": "",
-    "disable-glyph-caching": "",
-    "preconnection-id": "",
-    "hostname": "{}",
-    "username": "{}",
-    "password": "",
-    "domain": "developex",
-    "gateway-hostname": "",
-    "gateway-username": "",
-    "gateway-password": "",
-    "gateway-domain": "",
-    "initial-program": "",
-    "client-name": "",
-    "printer-name": "",
-    "drive-name": "",
-    "drive-path": "",
-    "static-channels": "",
-    "remote-app": "",
-    "remote-app-dir": "",
-    "remote-app-args": "",
-    "preconnection-blob": "",
-    "load-balance-info": "",
-    "recording-path": "",
-    "recording-name": "",
-    "sftp-hostname": "",
-    "sftp-host-key": "",
-    "sftp-username": "",
-    "sftp-password": "",
-    "sftp-private-key": "",
-    "sftp-passphrase": "",
-    "sftp-root-directory": "",
-    "sftp-directory": "",
-    "wol-send-packet": "true",
-    "wol-mac-addr": "{}"
-    }},"attributes": {{
-    "max-connections": "",
-    "max-connections-per-user": "",
-    "weight": "",
-    "failover-only": "",
-    "guacd-port": "",
-    "guacd-encryption": "",
-    "guacd-hostname": ""
-    }}
-        }}"#,
-        conn_grp_id, sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
-    );
+//#[tokio::main]
+//pub async fn create_gua_conn_group(
+//    gua_address: &String,
+//    gua_token: &String,
+//    gua_conn_grp_name: &String,
+//) -> Result<(), Box<dyn Error>> {
+//    let mut headers = HeaderMap::new();
+//    headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
+//
+//    //let test_name: String = String::from("test_grp1");
+//
+//    let request_data = format!(
+//        r#"{{"parentIdentifier": "ROOT",
+//    "name": "{}",
+//    "type": "ORGANIZATIONAL",
+//    "attributes": {{
+//    "max-connections": "",
+//    "max-connections-per-user": "",
+//    "enable-session-affinity": ""
+//    }}
+//        }}"#,
+//        gua_conn_grp_name
+//    );
+//
+//    let client = reqwest::Client::new();
+//
+//    let _resp = client
+//        .post(format!(
+//            "{}{}?token={}",
+//            gua_address, GUA_REST_CONN_GROUPS, gua_token
+//        ))
+//        .headers(headers.clone())
+//        .body(request_data)
+//        .send()
+//        .await?
+//        .text()
+//        .await?;
+//
+//    return Ok(());
+//}
 
-    let client = reqwest::Client::new();
-
-    let _resp = client
-        .post(format!(
-            "{}{}?token={}",
-            gua_address, GUA_REST_CONNECTIONS, gua_token
-        ))
-        .headers(headers.clone())
-        .body(request_data)
-        .send()
-        .await?
-        .text()
-        .await?;
-
-    return Ok(());
-}
-
-#[tokio::main]
-pub async fn update_gua_connection(
-    gua_address: &String,
-    gua_token: &String,
-    sccm_host: &SccmHost,
-    conn_id: &String,
-    conn_grp_id: &String,
-) -> Result<(), Box<dyn Error>> {
-    let mut conn_user: String = String::new();
-    if sccm_host.username != "no user" {
-        conn_user = sccm_host.username.clone();
-    }
-
-    let conn_grp_id: String = String::from("ROOT");
-
-    let mut headers = HeaderMap::new();
-    headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
-
-    let request_data = format!(
-        r#"{{
-    "parentIdentifier": "{}",
-    "name": "{}",
-    "protocol": "rdp",
-    "parameters": {{
-    "port": "3389",
-    "read-only": "",
-    "swap-red-blue": "",
-    "cursor": "",
-    "color-depth": "",
-    "clipboard-encoding": "",
-    "disable-copy": "",
-    "disable-paste": "",
-    "dest-port": "",
-    "recording-exclude-output": "",
-    "recording-exclude-mouse": "",
-    "recording-include-keys": "",
-    "create-recording-path": "",
-    "enable-sftp": "",
-    "sftp-port": "",
-    "sftp-server-alive-interval": "",
-    "enable-audio": "",
-    "security": "",
-    "disable-auth": "",
-    "ignore-cert": "true",
-    "gateway-port": "",
-    "server-layout": "",
-    "timezone": "",
-    "console": "",
-    "width": "",
-    "height": "",
-    "dpi": "",
-    "resize-method": "",
-    "console-audio": "",
-    "disable-audio": "",
-    "enable-audio-input": "",
-    "enable-printing": "",
-    "enable-drive": "",
-    "create-drive-path": "",
-    "enable-wallpaper": "",
-    "enable-theming": "",
-    "enable-font-smoothing": "",
-    "enable-full-window-drag": "",
-    "enable-desktop-composition": "",
-    "enable-menu-animations": "",
-    "disable-bitmap-caching": "",
-    "disable-offscreen-caching": "",
-    "disable-glyph-caching": "",
-    "preconnection-id": "",
-    "hostname": "{}",
-    "username": "{}",
-    "password": "",
-    "domain": "developex",
-    "gateway-hostname": "",
-    "gateway-username": "",
-    "gateway-password": "",
-    "gateway-domain": "",
-    "initial-program": "",
-    "client-name": "",
-    "printer-name": "",
-    "drive-name": "",
-    "drive-path": "",
-    "static-channels": "",
-    "remote-app": "",
-    "remote-app-dir": "",
-    "remote-app-args": "",
-    "preconnection-blob": "",
-    "load-balance-info": "",
-    "recording-path": "",
-    "recording-name": "",
-    "sftp-hostname": "",
-    "sftp-host-key": "",
-    "sftp-username": "",
-    "sftp-password": "",
-    "sftp-private-key": "",
-    "sftp-passphrase": "",
-    "sftp-root-directory": "",
-    "sftp-directory": "",
-    "wol-send-packet": "true",
-    "wol-mac-addr": "{}"
-    }},"attributes": {{
-    "max-connections": "",
-    "max-connections-per-user": "",
-    "weight": "",
-    "failover-only": "",
-    "guacd-port": "",
-    "guacd-encryption": "",
-    "guacd-hostname": ""
-    }}
-        }}"#,
-        conn_grp_id, sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
-    );
-
-    //let request_data = format!(
-    //    r#"{{"parentIdentifier": "ROOT",
-    //"name": "{}",
-    //"protocol": "rdp",
-    //"parameters": {{
-    //"port": "3389",
-    //"ignore-cert": "true",
-    //"hostname": "{}",
-    //"username": "{}",
-    //"domain": "developex",
-    //"wol-send-packet": "true",
-    //"wol-mac-addr": "{}"
-    //}}
-    //}}"#,
-    //    sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
-    //);
-
-    let client = reqwest::Client::new();
-
-    let _resp = client
-        .put(format!(
-            "{}{}/{}?token={}",
-            gua_address, GUA_REST_CONNECTIONS, conn_id, gua_token
-        ))
-        .headers(headers.clone())
-        .body(request_data)
-        .send()
-        .await?
-        .text()
-        .await?;
-
-    return Ok(());
-}
-
-#[tokio::main]
-pub async fn delete_gua_token(
-    gua_address: &String,
-    gua_token: &String,
-) -> Result<(), Box<dyn Error>> {
-    let client = reqwest::Client::new();
-
-    let _resp = client
-        .delete(format!("{}{}/{}", gua_address, GUA_REST_TOKENS, gua_token))
-        .send()
-        .await?
-        .text()
-        .await?;
-    return Ok(());
-}
-
-#[tokio::main]
-pub async fn get_gua_conn_groups(
-    gua_address: &String,
-    gua_token: &String,
-) -> Result<Vec<GuaConnGrp>, Box<dyn Error>> {
-    let mut conn_group_list: Vec<GuaConnGrp> = Vec::new();
-    let addr: String = gua_address.clone();
-    let tkn: String = gua_token.clone();
-    let gua_addr: Arc<String> = Arc::new(addr);
-    let gua_tkn: Arc<String> = Arc::new(tkn);
-
-    let client = reqwest::Client::new();
-
-    let resp = client
-        .get(format!(
-            "{}{}?token={}",
-            gua_addr.clone(),
-            GUA_REST_CONN_GROUPS,
-            gua_tkn.clone()
-        ))
-        .send()
-        .await?
-        .text()
-        .await?;
-    let raw_json: Value = serde_json::from_str(resp.as_str()).unwrap();
-    let conn_obj_json: &Map<String, Value> = raw_json.as_object().unwrap();
-    for raw_conn in conn_obj_json.values() {
-        //let mut enable_session_affinity: String = String::new();
-        //match raw_conn["attributes"]["enable-session-affinity"].as_str() {
-        //    None => enable_session_affinity.push_str("None"),
-        //    Some(x) => enable_session_affinity.push_str(x),
-        //}
-
-        let attributes: GuaConnGrpAttributes = GuaConnGrpAttributes {
-            max_connections: raw_conn["attributes"]["max-connections"].to_string(),
-            max_connections_per_user: raw_conn["attributes"]["max-connections-per-user"]
-                .to_string(),
-            //enable_session_affinity: enable_session_affinity,
-            enable_session_affinity: raw_conn["attributes"]["enable-session-affinity"].to_string(),
-        };
-
-        let conn_grp: GuaConnGrp = GuaConnGrp {
-            name: raw_conn["name"].as_str().unwrap().to_string(),
-            identifier: raw_conn["identifier"].as_str().unwrap().to_string(),
-            parent_identifier: raw_conn["parentIdentifier"].as_str().unwrap().to_string(),
-            conn_grp_type: raw_conn["type"].as_str().unwrap().to_string(),
-            active_connections: raw_conn["activeConnections"].as_u64().unwrap(),
-            attributes: attributes,
-        };
-
-        conn_group_list.push(conn_grp);
-    }
-
-    return Ok(conn_group_list);
-}
-
-#[tokio::main]
-pub async fn create_gua_conn_group(
-    gua_address: &String,
-    gua_token: &String,
-    gua_conn_grp_name: &String,
-) -> Result<(), Box<dyn Error>> {
-    let mut headers = HeaderMap::new();
-    headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
-
-    //let test_name: String = String::from("test_grp1");
-
-    let request_data = format!(
-        r#"{{"parentIdentifier": "ROOT",
-    "name": "{}",
-    "type": "ORGANIZATIONAL",
-    "attributes": {{
-    "max-connections": "",
-    "max-connections-per-user": "",
-    "enable-session-affinity": ""
-    }}
-        }}"#,
-        gua_conn_grp_name
-    );
-
-    let client = reqwest::Client::new();
-
-    let _resp = client
-        .post(format!(
-            "{}{}?token={}",
-            gua_address, GUA_REST_CONN_GROUPS, gua_token
-        ))
-        .headers(headers.clone())
-        .body(request_data)
-        .send()
-        .await?
-        .text()
-        .await?;
-
-    return Ok(());
-}
-
-#[tokio::main]
-pub async fn assign_gua_user_to_conn(
-    gua_address: &String,
-    gua_token: &String,
-    gua_conn: &GuaConn,
-) -> Result<(), Box<dyn Error>> {
-    let mut headers = HeaderMap::new();
-    headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
-
-    //let test_name: String = String::from("test_grp1");
-
-    let request_data = format!(
-        r#"[
-        {{
-        "op": "add",
-        "path": "/connectionPermissions/{}",
-        "value": "READ"
-        }}
-        ]
-        "#,
-        gua_conn.identifier
-    );
-    
-    let client = reqwest::Client::new();
-
-    let mut username: String = String::new();
-    match &gua_conn.proto_based_attributes {
-        ProtoBasedAttributes::RDP(x) => username = x.username.to_owned(),
-        _ => println!(""),
-    }
-    
-    let _resp = client
-        .patch(format!(
-            "{}{}/{}/permissions?token={}",
-            gua_address, GUA_REST_USERS, username, gua_token
-        ))
-        .headers(headers.clone())
-        .body(request_data)
-        .send()
-        .await?
-        .text()
-        .await?;
-
-    return Ok(());
-}
+//#[tokio::main]
+//pub async fn assign_gua_user_to_conn(
+//    gua_address: &String,
+//    gua_token: &String,
+//    gua_conn: &GuaConn,
+//) -> Result<(), Box<dyn Error>> {
+//    let mut headers = HeaderMap::new();
+//    headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
+//
+//    //let test_name: String = String::from("test_grp1");
+//
+//    let request_data = format!(
+//        r#"[
+//        {{
+//        "op": "add",
+//        "path": "/connectionPermissions/{}",
+//        "value": "READ"
+//        }}
+//        ]
+//        "#,
+//        gua_conn.identifier
+//    );
+//
+//    let client = reqwest::Client::new();
+//
+//    let mut username: String = String::new();
+//    match &gua_conn.proto_based_attributes {
+//        ProtoBasedAttributes::RDP(x) => username = x.username.to_owned(),
+//        _ => println!(""),
+//    }
+//
+//    let _resp = client
+//        .patch(format!(
+//            "{}{}/{}/permissions?token={}",
+//            gua_address, GUA_REST_USERS, username, gua_token
+//        ))
+//        .headers(headers.clone())
+//        .body(request_data)
+//        .send()
+//        .await?
+//        .text()
+//        .await?;
+//
+//    return Ok(());
+//}

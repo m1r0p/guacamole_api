@@ -1,16 +1,22 @@
 mod conf;
+mod enums;
 mod functions;
 mod structures;
-mod enums;
 
 ///// functions attaching
-use crate::functions::get_config_params::*;
-use crate::functions::parse_csv::*;
+use crate::functions::assign_gua_user_to_conn::*;
+use crate::functions::create_gua_conn_group::*;
+use crate::functions::create_gua_connection::*;
 use crate::functions::create_gua_token::*;
+use crate::functions::delete_gua_connection::*;
+use crate::functions::delete_gua_token::*;
+use crate::functions::get_config_params::*;
+use crate::functions::get_gua_conn_groups::*;
 use crate::functions::get_gua_connections::*;
+use crate::functions::parse_csv::*;
+use crate::functions::update_gua_connection::*;
 
 //use functions::*;
-
 
 use std::env;
 
@@ -147,7 +153,7 @@ fn main() {
                     continue;
                 }
                 //println!("{:?}", x.username);
-            },
+            }
 
             _ => continue,
         }

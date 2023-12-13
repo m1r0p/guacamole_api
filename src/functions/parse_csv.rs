@@ -2,8 +2,8 @@
 pub use crate::structures::host::Host;
 
 ///// external crates
-use std::error::Error;
 use csv;
+use std::error::Error;
 
 pub fn parse_csv(csv_path: &String) -> Result<Vec<Host>, Box<dyn Error>> {
     let mut gua_connections: Vec<Host> = Vec::new();

@@ -1,7 +1,7 @@
 //////// structures
+pub mod guaconn;
+pub mod guaconngrp;
 pub mod host;
-pub mod guaconn; 
-pub mod guaconngrp; 
 
 //pub use crate::enums::ProtoBasedAttributes;
 

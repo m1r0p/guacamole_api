@@ -1,5 +1,5 @@
 ///// local modules
-pub use crate::conf::{GUA_REST_TOKENS};
+pub use crate::conf::GUA_REST_TOKENS;
 
 ///// external crates
 use reqwest::header::{HeaderMap, CONTENT_TYPE};

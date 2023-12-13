@@ -1,5 +1,5 @@
 ///// local modules
-pub use crate::conf::{GUA_REST_CONNECTIONS};
+pub use crate::conf::GUA_REST_CONNECTIONS;
 
 ///// external crates
 use serde_json::Value;
@@ -78,4 +78,3 @@ pub async fn get_gua_connection_details(
     ];
     return Ok(conn_parameters);
 }
-

@@ -9,4 +9,3 @@ pub struct Host {
     pub ipv4: String,
     pub mac: String,
 }
-
