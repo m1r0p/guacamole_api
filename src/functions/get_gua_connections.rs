@@ -2,6 +2,7 @@
 pub use crate::conf::GUA_REST_CONNECTIONS;
 pub use crate::enums::ProtoBasedAttributes;
 pub use crate::functions::get_gua_rdp_connection_details::*;
+pub use crate::functions::get_gua_vnc_connection_details::*;
 pub use crate::structures::guaconn::{
     GuaConn, GuaConnAttributes, GuaRDPattributes, GuaVNCattributes,
 };
@@ -54,17 +55,24 @@ pub async fn get_gua_connections(
         let gua_addr: Arc<String> = Arc::clone(&gua_addr);
         let gua_tkn: Arc<String> = Arc::clone(&gua_tkn);
 
-        let rdp_attributes_array: [String; 7] = tokio::task::spawn_blocking(move || {
-            let rdp_attrs: [String; 7] =
-                get_gua_rdp_connection_details(gua_addr, gua_tkn, &conn_id).unwrap();
-            rdp_attrs
-        })
-        .await
-        .unwrap();
-        let protocol: String = raw_conn["protocol"].as_str().unwrap().to_string();
+        //let rdp_attributes_array: [String; 7] = tokio::task::spawn_blocking(move || {
+        //    let rdp_attrs: [String; 7] =
+        //        get_gua_rdp_connection_details(gua_addr, gua_tkn, &conn_id).unwrap();
+        //    rdp_attrs
+        //})
+        //.await
+        //.unwrap();
 
+        let protocol: String = raw_conn["protocol"].as_str().unwrap().to_string();
         match protocol.as_str() {
             _ if protocol.as_str() == "rdp" => {
+                let rdp_attributes_array: [String; 7] = tokio::task::spawn_blocking(move || {
+                    let rdp_attrs: [String; 7] =
+                        get_gua_rdp_connection_details(gua_addr, gua_tkn, &conn_id).unwrap();
+                    rdp_attrs
+                })
+                .await
+                .unwrap();
                 let proto_attributes: ProtoBasedAttributes =
                     ProtoBasedAttributes::RDP(GuaRDPattributes {
                         hostname: rdp_attributes_array[0].clone(),
@@ -90,8 +98,23 @@ pub async fn get_gua_connections(
             }
 
             _ if protocol.as_str() == "vnc" => {
+                let vnc_attributes_array: [String; 5] = tokio::task::spawn_blocking(move || {
+                    let vnc_attrs: [String; 5] =
+                        get_gua_vnc_connection_details(gua_addr, gua_tkn, &conn_id).unwrap();
+                    vnc_attrs
+                })
+                .await
+                .unwrap();
+
                 let proto_attributes: ProtoBasedAttributes =
-                    ProtoBasedAttributes::VNC(GuaVNCattributes {});
+                    ProtoBasedAttributes::VNC(GuaVNCattributes {
+                        hostname: vnc_attributes_array[0].clone(),
+                        port: vnc_attributes_array[1].clone(),
+                        username: vnc_attributes_array[2].clone(),
+                        wol_send_packet: vnc_attributes_array[3].clone(),
+                        wol_mac_addr: vnc_attributes_array[4].clone(),
+                    });
+
                 let conn: GuaConn = GuaConn {
                     active_connections: raw_conn["activeConnections"].as_u64().unwrap(),
                     attributes: attributes,

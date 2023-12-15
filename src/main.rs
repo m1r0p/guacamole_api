@@ -5,16 +5,18 @@ mod structures;
 
 ///// functions attaching
 use crate::functions::assign_gua_user_to_conn::*;
-use crate::functions::create_gua_conn_group::*;
-use crate::functions::create_gua_connection::*;
+//use crate::functions::create_gua_conn_group::*;
+use crate::functions::create_gua_rdp_connection::*;
 use crate::functions::create_gua_token::*;
-use crate::functions::delete_gua_connection::*;
+use crate::functions::create_gua_vnc_connection::*;
+//use crate::functions::delete_gua_connection::*;
 use crate::functions::delete_gua_token::*;
 use crate::functions::get_config_params::*;
-use crate::functions::get_gua_conn_groups::*;
+//use crate::functions::get_gua_conn_groups::*;
 use crate::functions::get_gua_connections::*;
 use crate::functions::parse_csv::*;
-use crate::functions::update_gua_connection::*;
+use crate::functions::update_gua_rdp_connection::*;
+use crate::functions::update_gua_vnc_connection::*;
 
 use std::env;
 
@@ -41,18 +43,27 @@ fn main() {
     println!("token: {}", &token);
 
     //// get existent guacamole connection groups
-    let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[0], &token).unwrap();
+    //let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[0], &token).unwrap();
 
     //// get existent guacamole connections
     let connections: Vec<GuaConn> = get_gua_connections(&vec_config[0], &token).unwrap();
 
-    //// parse .csv and get actual host list from SCCM
+    //// parse .csv and get actual RDP host list
     let rdp_hosts: Vec<Host> = parse_csv(&vec_config[3]).unwrap();
 
     ////create separate vector of RDP hostnames for comparing
     let mut rdp_host_names: Vec<String> = Vec::new();
     for host in rdp_hosts.iter() {
         rdp_host_names.push(host.hostname.clone());
+    }
+
+    //// parse .csv and get actual VNC host list
+    let vnc_hosts: Vec<Host> = parse_csv(&vec_config[4]).unwrap();
+
+    ////create separate vector of VNC hostnames for comparing
+    let mut vnc_host_names: Vec<String> = Vec::new();
+    for host in vnc_hosts.iter() {
+        vnc_host_names.push(host.hostname.clone());
     }
 
     ////create separate vector for connection group names
@@ -73,7 +84,10 @@ fn main() {
     //}
 
     //// get existent guacamole connection groups again
-    let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[0], &token).unwrap();
+    //let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[0], &token).unwrap();
+
+    //// create static parent connection group ROOT for backward compability
+    let conn_group_identifier: String = String::from("ROOT");
 
     //// compare attributes and update or delete existent RDP connections
     if connections.len() > 0 {
@@ -86,28 +100,71 @@ fn main() {
                 if !rdp_host_names.contains(&conn.name) {
                     //println!("DELETING CONNECTION");
                     //println!("{}", &i.name);
-                    //_ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
+                    //_ = delete_gua_connection(&vec_config[0], &token, &i.identifier);
                     continue;
                 } else {
-                    println!("UPDATING EXISTENT CONNECTION");
+                    println!("UPDATING EXISTENT RDP CONNECTION");
                     for rdp_host in rdp_hosts.iter() {
                         if rdp_host.hostname == conn.name {
-                            for conn_grp in conn_grp_list.iter() {
-                                if conn_grp.name == rdp_host.hostname {
-                                    println!("{} - {}", &conn.name, &conn.identifier);
-                                    _ = update_gua_connection(
+                            //for conn_grp in conn_grp_list.iter() {
+                            //    if conn_grp.name == rdp_host.hostname {
+                            //        println!("{} - {}", &conn.name, &conn.identifier);
+                            //        _ = update_gua_rdp_connection(
+                            //            &vec_config[0],
+                            //            &token,
+                            //            &rdp_host,
+                            //            &conn.identifier,
+                            //            &conn_grp.identifier,
+                            //        );
+                            //    }
+                            //}
+                            println!("{} - {}", &conn.name, &conn.identifier);
+                                    _ = update_gua_rdp_connection(
                                         &vec_config[0],
                                         &token,
                                         &rdp_host,
                                         &conn.identifier,
-                                        &conn_grp.identifier,
+                                        &conn_group_identifier,
                                     );
-                                }
-                            }
                         }
                     }
                 }
                 //println!("{:?}", &i);
+            }
+
+            if conn.protocol == "vnc" {
+                if !vnc_host_names.contains(&conn.name) {
+                    //println!("DELETING CONNECTION");
+                    //println!("{}", &i.name);
+                    //_ = delete_gua_connection(&vec_config[0], &token, &i.identifier);
+                    continue;
+                } else {
+                    println!("UPDATING EXISTENT VNC CONNECTION");
+                    for vnc_host in vnc_hosts.iter() {
+                        if vnc_host.hostname == conn.name {
+                            //for conn_grp in conn_grp_list.iter() {
+                            //    if conn_grp.name == vnc_host.hostname {
+                            //        println!("{} - {}", &conn.name, &conn.identifier);
+                            //        _ = update_gua_vnc_connection(
+                            //            &vec_config[0],
+                            //            &token,
+                            //            &vnc_host,
+                            //            &conn.identifier,
+                            //            &conn_grp.identifier,
+                            //        );
+                            //    }
+                            //}
+                            println!("{} - {}", &conn.name, &conn.identifier);
+                                    _ = update_gua_vnc_connection(
+                                        &vec_config[0],
+                                        &token,
+                                        &vnc_host,
+                                        &conn.identifier,
+                                        &conn_group_identifier,
+                                    );
+                        }
+                    }
+                }
             }
         }
     } else {
@@ -120,21 +177,41 @@ fn main() {
         connection_names.push(conn.name.clone());
     }
 
-    //// create non existent connections
+    //// create non existent RDP connections
     for rdp_host in rdp_hosts.iter() {
         if !connection_names.contains(&rdp_host.hostname) {
-            println!("CREATING CONNECTION");
+            println!("CREATING RDP CONNECTION");
             println!("{}", &rdp_host.hostname);
-            for conn_grp in conn_grp_list.iter() {
-                if conn_grp.name == rdp_host.hostname {
-                    _ = create_gua_connection(
-                        &vec_config[0],
-                        &token,
-                        &rdp_host,
-                        &conn_grp.identifier,
-                    );
-                }
-            }
+            //for conn_grp in conn_grp_list.iter() {
+            //    if conn_grp.name == rdp_host.hostname {
+            //        _ = create_gua_rdp_connection(
+            //            &vec_config[0],
+            //            &token,
+            //            &rdp_host,
+            //            &conn_grp.identifier,
+            //        );
+            //    }
+            //}
+            _ = create_gua_rdp_connection(&vec_config[0], &token, &rdp_host, &conn_group_identifier,);
+        }
+    }
+
+    //// create non existent VNC connections
+    for vnc_host in vnc_hosts.iter() {
+        if !connection_names.contains(&vnc_host.hostname) {
+            println!("CREATING VNC CONNECTION");
+            println!("{}", &vnc_host.hostname);
+            //for conn_grp in conn_grp_list.iter() {
+            //    if conn_grp.name == vnc_host.hostname {
+            //        _ = create_gua_vnc_connection(
+            //            &vec_config[0],
+            //            &token,
+            //            &vnc_host,
+            //            &conn_grp.identifier,
+            //        );
+            //    }
+            //}
+            _ = create_gua_vnc_connection(&vec_config[0], &token, &vnc_host, &conn_group_identifier,);
         }
     }
 

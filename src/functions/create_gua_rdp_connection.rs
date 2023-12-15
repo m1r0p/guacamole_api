@@ -7,22 +7,26 @@ use reqwest::header::{HeaderMap, CONTENT_TYPE};
 use std::error::Error;
 
 #[tokio::main]
-pub async fn update_gua_connection(
+pub async fn create_gua_rdp_connection(
     gua_address: &String,
     gua_token: &String,
     input_host: &Host,
-    conn_id: &String,
     conn_grp_id: &String,
 ) -> Result<(), Box<dyn Error>> {
     let mut conn_user: String = String::new();
+    //if sccm_host.username != "NO USER" {
+    //    let vec_user: &Vec<&str> = &sccm_host.username.split("\\").collect();
+    //    conn_user = format!("{}\\\\{}", vec_user[0], vec_user[1]);
+    //}
     if input_host.username != "no user" {
+        //let vec_user: &Vec<&str> = &sccm_host.username.split("\\").collect();
         conn_user = input_host.username.clone();
     }
 
-    let conn_grp_id: String = String::from("ROOT");
-
     let mut headers = HeaderMap::new();
     headers.insert(CONTENT_TYPE, format!("application/json").parse().unwrap());
+
+    //let conn_grp_id: String = String::from("ROOT");
 
     let request_data = format!(
         r#"{{
@@ -118,29 +122,12 @@ pub async fn update_gua_connection(
         conn_grp_id, input_host.hostname, input_host.ipv4, conn_user, input_host.mac
     );
 
-    //let request_data = format!(
-    //    r#"{{"parentIdentifier": "ROOT",
-    //"name": "{}",
-    //"protocol": "rdp",
-    //"parameters": {{
-    //"port": "3389",
-    //"ignore-cert": "true",
-    //"hostname": "{}",
-    //"username": "{}",
-    //"domain": "developex",
-    //"wol-send-packet": "true",
-    //"wol-mac-addr": "{}"
-    //}}
-    //}}"#,
-    //    sccm_host.hostname, sccm_host.ipv4, conn_user, sccm_host.mac
-    //);
-
     let client = reqwest::Client::new();
 
     let _resp = client
-        .put(format!(
-            "{}{}/{}?token={}",
-            gua_address, GUA_REST_CONNECTIONS, conn_id, gua_token
+        .post(format!(
+            "{}{}?token={}",
+            gua_address, GUA_REST_CONNECTIONS, gua_token
         ))
         .headers(headers.clone())
         .body(request_data)
