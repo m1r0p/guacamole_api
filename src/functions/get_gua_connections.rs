@@ -1,7 +1,7 @@
 ///// local modules
 pub use crate::conf::GUA_REST_CONNECTIONS;
 pub use crate::enums::ProtoBasedAttributes;
-pub use crate::functions::get_gua_connection_details::*;
+pub use crate::functions::get_gua_rdp_connection_details::*;
 pub use crate::structures::guaconn::{
     GuaConn, GuaConnAttributes, GuaRDPattributes, GuaVNCattributes,
 };
@@ -55,16 +55,12 @@ pub async fn get_gua_connections(
         let gua_tkn: Arc<String> = Arc::clone(&gua_tkn);
 
         let rdp_attributes_array: [String; 7] = tokio::task::spawn_blocking(move || {
-            //let rdp_attributes: [String; 7]  = thread::spawn(move || {
             let rdp_attrs: [String; 7] =
-                get_gua_connection_details(gua_addr, gua_tkn, &conn_id).unwrap();
+                get_gua_rdp_connection_details(gua_addr, gua_tkn, &conn_id).unwrap();
             rdp_attrs
         })
         .await
-        //.join()
         .unwrap();
-        //println!("{:?}", rdp_attributes);
-        //println!("{} {} {} {} {}", rdp_attributes[0], rdp_attributes[1], rdp_attributes[2], rdp_attributes[3], rdp_attributes[4]);
         let protocol: String = raw_conn["protocol"].as_str().unwrap().to_string();
 
         match protocol.as_str() {

@@ -34,4 +34,10 @@ pub struct GuaRDPattributes {
 }
 
 #[derive(Debug)]
-pub struct GuaVNCattributes {}
+pub struct GuaVNCattributes {
+    pub hostname: String,
+    pub port: String,
+    pub username: String,
+    pub wol_send_packet: String,
+    pub wol_mac_addr: String,
+}

@@ -7,7 +7,7 @@ use std::error::Error;
 use std::sync::Arc;
 
 #[tokio::main]
-pub async fn get_gua_connection_details(
+pub async fn get_gua_rdp_connection_details(
     gua_address: Arc<String>,
     gua_token: Arc<String>,
     conn_id: &String,
