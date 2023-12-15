@@ -1,4 +1,4 @@
-use crate::structures::{GuaRDPattributes, GuaVNCattributes};
+use crate::structures::guaconn::{GuaRDPattributes, GuaVNCattributes};
 
 #[derive(Debug)]
 pub enum ProtoBasedAttributes {

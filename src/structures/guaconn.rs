@@ -35,10 +35,3 @@ pub struct GuaRDPattributes {
 
 #[derive(Debug)]
 pub struct GuaVNCattributes {}
-
-#[derive(Debug)]
-pub struct GuaConnGrpAttributes {
-    pub max_connections: String,
-    pub max_connections_per_user: String,
-    pub enable_session_affinity: String,
-}

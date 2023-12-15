@@ -49,12 +49,12 @@ fn main() {
     let connections: Vec<GuaConn> = get_gua_connections(&vec_config[1], &token).unwrap();
 
     //// parse .csv and get actual host list from SCCM
-    let sccm_hosts: Vec<SccmHost> = parse_csv(&vec_config[0]).unwrap();
+    let rdp_hosts: Vec<Host> = parse_csv(&vec_config[0]).unwrap();
 
     ////create separate vector of PC names for comparing hostnames
-    let mut sccm_host_names: Vec<String> = Vec::new();
-    for host in sccm_hosts.iter() {
-        sccm_host_names.push(host.hostname.clone());
+    let mut rdp_host_names: Vec<String> = Vec::new();
+    for host in rdp_hosts.iter() {
+        rdp_host_names.push(host.hostname.clone());
     }
 
     ////create separate vector for connection group names
@@ -63,7 +63,7 @@ fn main() {
         conn_grp_names.push(grp_name.name.clone());
     }
 
-    for host_name in sccm_host_names.iter() {
+    for host_name in rdp_host_names.iter() {
         if !conn_grp_names.contains(&host_name) {
             println!("CREATING COONECTION GROUP - {}", &host_name);
             _ = create_gua_conn_group(&vec_config[1], &token, &host_name);
@@ -84,22 +84,22 @@ fn main() {
             //    get_gua_connection_details(&vec_config[1], &token, &i.identifier).unwrap();
             //println!("{:?}", conn_det);
             if conn.protocol == "rdp" {
-                if !sccm_host_names.contains(&conn.name) {
+                if !rdp_host_names.contains(&conn.name) {
                     //println!("DELETING CONNECTION");
                     //println!("{}", &i.name);
                     //_ = delete_gua_connection(&vec_config[1], &token, &i.identifier);
                     continue;
                 } else {
                     println!("UPDATING EXISTENT CONNECTION");
-                    for sccm_host in sccm_hosts.iter() {
-                        if sccm_host.hostname == conn.name {
+                    for rdp_host in rdp_hosts.iter() {
+                        if rdp_host.hostname == conn.name {
                             for conn_grp in conn_grp_list.iter() {
-                                if conn_grp.name == sccm_host.hostname {
+                                if conn_grp.name == rdp_host.hostname {
                                     println!("{} - {}", &conn.name, &conn.identifier);
                                     _ = update_gua_connection(
                                         &vec_config[1],
                                         &token,
-                                        &sccm_host,
+                                        &rdp_host,
                                         &conn.identifier,
                                         &conn_grp.identifier,
                                     );
@@ -122,16 +122,16 @@ fn main() {
     }
 
     //// create non existent connections
-    for sccm_host in sccm_hosts.iter() {
-        if !connection_names.contains(&sccm_host.hostname) {
+    for rdp_host in rdp_hosts.iter() {
+        if !connection_names.contains(&rdp_host.hostname) {
             println!("CREATING CONNECTION");
-            println!("{}", &sccm_host.hostname);
+            println!("{}", &rdp_host.hostname);
             for conn_grp in conn_grp_list.iter() {
-                if conn_grp.name == sccm_host.hostname {
+                if conn_grp.name == rdp_host.hostname {
                     _ = create_gua_connection(
                         &vec_config[1],
                         &token,
-                        &sccm_host,
+                        &rdp_host,
                         &conn_grp.identifier,
                     );
                 }

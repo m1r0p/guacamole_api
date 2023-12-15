@@ -1,6 +1,6 @@
 ///// local modules
 pub use crate::conf::GUA_REST_CONN_GROUPS;
-pub use crate::structures::guaconngrp::GuaConnGrp;
+pub use crate::structures::guaconngrp::{GuaConnGrpAttributes, GuaConnGrp};
 
 ///// external crates
 use serde_json::{Map, Value};
