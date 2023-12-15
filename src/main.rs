@@ -29,9 +29,9 @@ fn main() {
         if word.as_str().eq("--config") {
             config_path.push_str(args[i + 1].as_str());
         }
-        if word.as_str().eq("--input_csv") {
-            input_csv_path.push_str(args[i + 1].as_str());
-        }
+        //if word.as_str().eq("--input_csv") {
+        //    input_csv_path.push_str(args[i + 1].as_str());
+        //}
 
         i = i + 1;
     }
@@ -39,19 +39,19 @@ fn main() {
     let vec_config: Vec<String> = get_config_params(config_path).unwrap();
 
     //// create token for this session
-    let token: String = create_gua_token(&vec_config[1], &vec_config[2], &vec_config[3]).unwrap();
+    let token: String = create_gua_token(&vec_config[0], &vec_config[1], &vec_config[2]).unwrap();
     println!("token: {}", &token);
 
     //// get existent guacamole connection groups
-    let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[1], &token).unwrap();
+    let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[0], &token).unwrap();
 
     //// get existent guacamole connections
-    let connections: Vec<GuaConn> = get_gua_connections(&vec_config[1], &token).unwrap();
+    let connections: Vec<GuaConn> = get_gua_connections(&vec_config[0], &token).unwrap();
 
     //// parse .csv and get actual host list from SCCM
-    let rdp_hosts: Vec<Host> = parse_csv(&vec_config[0]).unwrap();
+    let rdp_hosts: Vec<Host> = parse_csv(&vec_config[3]).unwrap();
 
-    ////create separate vector of PC names for comparing hostnames
+    ////create separate vector of RDP hostnames for comparing
     let mut rdp_host_names: Vec<String> = Vec::new();
     for host in rdp_hosts.iter() {
         rdp_host_names.push(host.hostname.clone());
@@ -74,7 +74,7 @@ fn main() {
     }
 
     //// get existent guacamole connection groups again
-    let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[1], &token).unwrap();
+    let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[0], &token).unwrap();
 
     //// compare attributes and update or delete existent RDP connections
     if connections.len() > 0 {
@@ -97,7 +97,7 @@ fn main() {
                                 if conn_grp.name == rdp_host.hostname {
                                     println!("{} - {}", &conn.name, &conn.identifier);
                                     _ = update_gua_connection(
-                                        &vec_config[1],
+                                        &vec_config[0],
                                         &token,
                                         &rdp_host,
                                         &conn.identifier,
@@ -129,7 +129,7 @@ fn main() {
             for conn_grp in conn_grp_list.iter() {
                 if conn_grp.name == rdp_host.hostname {
                     _ = create_gua_connection(
-                        &vec_config[1],
+                        &vec_config[0],
                         &token,
                         &rdp_host,
                         &conn_grp.identifier,
@@ -140,14 +140,14 @@ fn main() {
     }
 
     //// get existent guacamole connections again
-    let connections: Vec<GuaConn> = get_gua_connections(&vec_config[1], &token).unwrap();
+    let connections: Vec<GuaConn> = get_gua_connections(&vec_config[0], &token).unwrap();
 
     for conn in connections.iter() {
         match &conn.proto_based_attributes {
             ProtoBasedAttributes::RDP(x) => {
                 if x.username.as_str() != "None" {
                     println!("ASSIGN {} to {}", &conn.name, &x.username);
-                    _ = assign_gua_user_to_conn(&vec_config[1], &token, &conn);
+                    _ = assign_gua_user_to_conn(&vec_config[0], &token, &conn);
                 } else {
                     println!("SKIPING ASSIGN FOR USER {}", &x.username);
                     continue;
@@ -172,5 +172,5 @@ fn main() {
     }
 
     // deleting token for this session (cleaning)
-    _ = delete_gua_token(&vec_config[1], &token);
+    _ = delete_gua_token(&vec_config[0], &token);
 }
