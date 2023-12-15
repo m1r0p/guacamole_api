@@ -16,14 +16,12 @@ use crate::functions::get_gua_connections::*;
 use crate::functions::parse_csv::*;
 use crate::functions::update_gua_connection::*;
 
-//use functions::*;
-
 use std::env;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut config_path: String = String::new();
-    let mut input_csv_path: String = String::new();
+    //let mut input_csv_path: String = String::new();
     let mut i: usize = 0;
     for word in args.iter() {
         if word.as_str().eq("--config") {
@@ -58,20 +56,21 @@ fn main() {
     }
 
     ////create separate vector for connection group names
-    let mut conn_grp_names: Vec<String> = Vec::new();
-    for grp_name in conn_grp_list.iter() {
-        conn_grp_names.push(grp_name.name.clone());
-    }
+    //let mut conn_grp_names: Vec<String> = Vec::new();
+    //for grp_name in conn_grp_list.iter() {
+    //    conn_grp_names.push(grp_name.name.clone());
+    //}
 
-    for host_name in rdp_host_names.iter() {
-        if !conn_grp_names.contains(&host_name) {
-            println!("CREATING COONECTION GROUP - {}", &host_name);
-            _ = create_gua_conn_group(&vec_config[1], &token, &host_name);
-        } else {
-            println!("COONECTION GROUP {} EXIST. SKIPING", &host_name);
-            continue;
-        }
-    }
+    //// create connection groups
+    //for host_name in rdp_host_names.iter() {
+    //    if !conn_grp_names.contains(&host_name) {
+    //        println!("CREATING COONECTION GROUP - {}", &host_name);
+    //        _ = create_gua_conn_group(&vec_config[1], &token, &host_name);
+    //    } else {
+    //        println!("COONECTION GROUP {} EXIST. SKIPING", &host_name);
+    //        continue;
+    //    }
+    //}
 
     //// get existent guacamole connection groups again
     let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[0], &token).unwrap();
