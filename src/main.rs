@@ -10,10 +10,10 @@ use crate::functions::create_gua_rdp_connection::*;
 use crate::functions::create_gua_token::*;
 use crate::functions::create_gua_vnc_connection::*;
 //use crate::functions::delete_gua_connection::*;
-//use crate::functions::delete_gua_conn_group::*;
+use crate::functions::delete_gua_conn_group::*;
 use crate::functions::delete_gua_token::*;
 use crate::functions::get_config_params::*;
-//use crate::functions::get_gua_conn_groups::*;
+use crate::functions::get_gua_conn_groups::*;
 use crate::functions::get_gua_connections::*;
 use crate::functions::parse_csv::*;
 use crate::functions::update_gua_rdp_connection::*;
@@ -258,14 +258,14 @@ fn main() {
         //println!("{:?}", &conn.proto_based_attributes::RDP.username);
     }
 
-    //// get existent guacamole connection groups again
+    ////// get existent guacamole connection groups again
     //let conn_grp_list: Vec<GuaConnGrp> = get_gua_conn_groups(&vec_config[0], &token).unwrap();
 
-    ////delete all conn groups
+    //////delete all conn groups
     //for conn_grp in conn_grp_list.iter() {
     //    _ = delete_gua_conn_group(&vec_config[0], &token, &conn_grp.identifier);
     //}
 
-    // deleting token for this session (cleaning)
+    //// deleting token for this session (cleaning)
     _ = delete_gua_token(&vec_config[0], &token);
 }
