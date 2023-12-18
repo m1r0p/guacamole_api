@@ -14,11 +14,11 @@ use crate::functions::create_gua_vnc_connection::*;
 use crate::functions::delete_gua_token::*;
 use crate::functions::get_config_params::*;
 //use crate::functions::get_gua_conn_groups::*;
+use crate::functions::assign_conn_to_user_group::*;
 use crate::functions::get_gua_connections::*;
 use crate::functions::parse_csv::*;
 use crate::functions::update_gua_rdp_connection::*;
 use crate::functions::update_gua_vnc_connection::*;
-use crate::functions::assign_conn_to_user_group::*;
 
 use std::env;
 
@@ -247,15 +247,12 @@ fn main() {
                 if conn.name.starts_with("stand") {
                     println!("ASSIGN {} to GROUP {}", &conn.name, &vec_config[5]);
                     _ = assign_conn_to_user_group(&vec_config[0], &token, &conn, &vec_config[5]);
-                } 
+                }
                 if conn.name.starts_with("autostand") {
                     println!("ASSIGN {} to GROUP {}", &conn.name, &vec_config[6]);
                     //_ = assign_conn_to_user_group(&vec_config[0], &token, &conn, &vec_config[6]);
                 }
-
-            }
-
-            //_ => continue,
+            } //_ => continue,
         }
         //if conn.username.as_str() != "None" {
         //    _ = assign_gua_user_to_conn(&vec_config[1], &token, &conn);
@@ -276,7 +273,6 @@ fn main() {
     //for conn_grp in conn_grp_list.iter() {
     //    _ = delete_gua_conn_group(&vec_config[0], &token, &conn_grp.identifier);
     //}
-
 
     //// deleting token for this session (cleaning)
     _ = delete_gua_token(&vec_config[0], &token);
