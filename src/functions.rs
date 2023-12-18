@@ -16,3 +16,4 @@ pub mod get_gua_vnc_connection_details;
 pub mod parse_csv;
 pub mod update_gua_rdp_connection;
 pub mod update_gua_vnc_connection;
+pub mod assign_conn_to_user_group;

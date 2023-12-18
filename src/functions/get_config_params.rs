@@ -14,6 +14,9 @@ pub fn get_config_params(string_path: String) -> Result<Vec<String>, Box<dyn Err
     config_params.push(raw_conf.get("gua_pass").unwrap());
     config_params.push(raw_conf.get("rdp_hosts_file").unwrap());
     config_params.push(raw_conf.get("vnc_hosts_file").unwrap());
+    config_params.push(raw_conf.get("manual_stands_assign_group").unwrap());
+    config_params.push(raw_conf.get("automation_stands_assign_group").unwrap());
+
 
     return Ok(config_params);
 }
