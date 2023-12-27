@@ -250,9 +250,10 @@ fn main() {
                 }
                 if conn.name.starts_with("autostand") {
                     println!("ASSIGN {} to GROUP {}", &conn.name, &vec_config[6]);
-                    //_ = assign_conn_to_user_group(&vec_config[0], &token, &conn, &vec_config[6]);
+                    _ = assign_conn_to_user_group(&vec_config[0], &token, &conn, &vec_config[6]);
                 }
-            } //_ => continue,
+                //_ => continue,
+            }
         }
         //if conn.username.as_str() != "None" {
         //    _ = assign_gua_user_to_conn(&vec_config[1], &token, &conn);
