@@ -9,7 +9,7 @@ use crate::functions::assign_gua_user_to_conn::*;
 use crate::functions::create_gua_rdp_connection::*;
 use crate::functions::create_gua_token::*;
 use crate::functions::create_gua_vnc_connection::*;
-//use crate::functions::delete_gua_connection::*;
+use crate::functions::delete_gua_connection::*;
 //use crate::functions::delete_gua_conn_group::*;
 use crate::functions::delete_gua_token::*;
 use crate::functions::get_config_params::*;
@@ -101,8 +101,8 @@ fn main() {
             if conn.protocol == "rdp" {
                 if !rdp_host_names.contains(&conn.name) {
                     //println!("DELETING CONNECTION");
-                    //println!("{}", &i.name);
-                    //_ = delete_gua_connection(&vec_config[0], &token, &i.identifier);
+                    //println!("{}", &conn.name);
+                    //_ = delete_gua_connection(&vec_config[0], &token, &conn.identifier);
                     continue;
                 } else {
                     println!("UPDATING EXISTENT RDP CONNECTION");
@@ -136,10 +136,10 @@ fn main() {
 
             if conn.protocol == "vnc" {
                 if !vnc_host_names.contains(&conn.name) {
-                    //println!("DELETING CONNECTION");
-                    //println!("{}", &i.name);
-                    //_ = delete_gua_connection(&vec_config[0], &token, &i.identifier);
-                    continue;
+                    println!("DELETING CONNECTION");
+                    println!("{}", &conn.name);
+                    _ = delete_gua_connection(&vec_config[0], &token, &conn.identifier);
+                    //continue;
                 } else {
                     println!("UPDATING EXISTENT VNC CONNECTION");
                     for vnc_host in vnc_hosts.iter() {
