@@ -16,11 +16,16 @@ or
 
 ```
 {
-    "csv_input_file":"<path_to_hostlist.csv>",
     "gua_proto_address":"http://<your_ip_or_hostname>:8080/guacamole",
-    "gua_user":"guacadmin",
-    "gua_pass":"guacadmin"
+    "gua_user":"<guacamole_admin_user>",
+    "gua_pass":"<password_for_admin_user>",
+    "rdp_hosts_file":"<path_to_csv_with_rdp_hosts>",
+    "vnc_hosts_file":"<path_to_csv_with_vnc_hosts>",
+    "manual_stands_assign_group":"AD_group_for_manual_stands",
+    "automation_stands_assign_group":"AD_group_for_automation_stands"
 }
+
+
 
 ```
 
