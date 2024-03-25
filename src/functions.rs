@@ -14,7 +14,7 @@ pub mod get_gua_conn_groups;
 pub mod get_gua_connections;
 pub mod get_gua_rdp_connection_details;
 pub mod get_gua_vnc_connection_details;
-pub mod parse_broadcast_addresses;
+pub mod get_broadcast_map;
 pub mod parse_csv;
 pub mod update_gua_rdp_connection;
 pub mod update_gua_vnc_connection;
