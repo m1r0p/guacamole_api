@@ -11,7 +11,7 @@ pub async fn get_gua_rdp_connection_details(
     gua_address: Arc<String>,
     gua_token: Arc<String>,
     conn_id: &String,
-) -> Result<[String; 7], Box<dyn Error>> {
+) -> Result<[String; 8], Box<dyn Error>> {
     let client = reqwest::Client::new();
 
     let resp = client
@@ -67,7 +67,13 @@ pub async fn get_gua_rdp_connection_details(
         Some(x) => wol_mac_addr.push_str(x),
     }
 
-    let conn_parameters: [String; 7] = [
+    let mut wol_broadcast_addr: String = String::new();
+    match resp_json["wol-broadcast-addr"].as_str() {
+        None => wol_broadcast_addr.push_str("None"),
+        Some(x) => wol_broadcast_addr.push_str(x),
+    }
+
+    let conn_parameters: [String; 8] = [
         hostname,
         port,
         username,
@@ -75,6 +81,7 @@ pub async fn get_gua_rdp_connection_details(
         ignore_cert,
         wol_send_packet,
         wol_mac_addr,
+        wol_broadcast_addr,
     ];
     return Ok(conn_parameters);
 }

@@ -11,7 +11,7 @@ pub async fn get_gua_vnc_connection_details(
     gua_address: Arc<String>,
     gua_token: Arc<String>,
     conn_id: &String,
-) -> Result<[String; 5], Box<dyn Error>> {
+) -> Result<[String; 6], Box<dyn Error>> {
     let client = reqwest::Client::new();
 
     let resp = client
@@ -67,6 +67,19 @@ pub async fn get_gua_vnc_connection_details(
         Some(x) => wol_mac_addr.push_str(x),
     }
 
-    let conn_parameters: [String; 5] = [hostname, port, username, wol_send_packet, wol_mac_addr];
+    let mut wol_broadcast_addr: String = String::new();
+    match resp_json["wol-broadcast-addr"].as_str() {
+        None => wol_broadcast_addr.push_str("None"),
+        Some(x) => wol_broadcast_addr.push_str(x),
+    }
+
+    let conn_parameters: [String; 6] = [
+        hostname,
+        port,
+        username,
+        wol_send_packet,
+        wol_mac_addr,
+        wol_broadcast_addr,
+    ];
     return Ok(conn_parameters);
 }

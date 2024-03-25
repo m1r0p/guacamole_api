@@ -15,15 +15,16 @@ use crate::functions::delete_gua_token::*;
 use crate::functions::get_config_params::*;
 //use crate::functions::get_gua_conn_groups::*;
 use crate::functions::assign_conn_to_user_group::*;
-use crate::functions::get_gua_connections::*;
 use crate::functions::get_broadcast_map::*;
+use crate::functions::get_gua_connections::*;
 use crate::functions::parse_csv::*;
 use crate::functions::update_gua_rdp_connection::*;
 use crate::functions::update_gua_vnc_connection::*;
 
-use std::env;
-use std::collections::HashMap;
 use ipnet::Ipv4Net;
+use std::collections::HashMap;
+use std::env;
+use std::net::Ipv4Addr;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -121,18 +122,25 @@ fn main() {
                             //        );
                             //    }
                             //}
-                            println!("{} - {}", &conn.name, &conn.identifier);
+                            let mut brd_address: String = String::new();
+                            let host_ip: Ipv4Addr = rdp_host.ipv4.parse().unwrap();
+                            for (b_net, b_addr) in broadcast_map.iter() {
+                                if b_net.contains(&host_ip) {
+                                    brd_address = b_addr.to_string();
+                                }
+                            }
+                            println!("{} - {} BRD_ADDR - {}", &conn.name, &conn.identifier, &brd_address);
                             _ = update_gua_rdp_connection(
                                 &vec_config[0],
                                 &token,
                                 &rdp_host,
                                 &conn.identifier,
                                 &conn_group_identifier,
+                                &brd_address,
                             );
                         }
                     }
                 }
-                //println!("{:?}", &i);
             }
 
             if conn.protocol == "vnc" {
@@ -157,6 +165,13 @@ fn main() {
                             //        );
                             //    }
                             //}
+                            let mut brd_address: String = String::new();
+                            let host_ip: Ipv4Addr = vnc_host.ipv4.parse().unwrap();
+                            for (b_net, b_addr) in broadcast_map.iter() {
+                                if b_net.contains(&host_ip) {
+                                    brd_address = b_addr.to_string();
+                                }
+                            }
                             println!("{} - {}", &conn.name, &conn.identifier);
                             _ = update_gua_vnc_connection(
                                 &vec_config[0],
@@ -164,6 +179,7 @@ fn main() {
                                 &vnc_host,
                                 &conn.identifier,
                                 &conn_group_identifier,
+                                &brd_address,
                             );
                         }
                     }
@@ -195,11 +211,19 @@ fn main() {
             //        );
             //    }
             //}
+            let mut brd_address: String = String::new();
+            let host_ip: Ipv4Addr = rdp_host.ipv4.parse().unwrap();
+            for (b_net, b_addr) in broadcast_map.iter() {
+                if b_net.contains(&host_ip) {
+                    brd_address = b_addr.to_string();
+                }
+            }
             _ = create_gua_rdp_connection(
                 &vec_config[0],
                 &token,
                 &rdp_host,
                 &conn_group_identifier,
+                &brd_address,
             );
         }
     }
@@ -219,11 +243,19 @@ fn main() {
             //        );
             //    }
             //}
+            let mut brd_address: String = String::new();
+            let host_ip: Ipv4Addr = vnc_host.ipv4.parse().unwrap();
+            for (b_net, b_addr) in broadcast_map.iter() {
+                if b_net.contains(&host_ip) {
+                    brd_address = b_addr.to_string();
+                }
+            }
             _ = create_gua_vnc_connection(
                 &vec_config[0],
                 &token,
                 &vnc_host,
                 &conn_group_identifier,
+                &brd_address,
             );
         }
     }

@@ -16,7 +16,12 @@ pub fn get_config_params(string_path: String) -> Result<Vec<String>, Box<dyn Err
     config_params.push(raw_conf.get("vnc_hosts_file").unwrap());
     config_params.push(raw_conf.get("manual_stands_assign_group").unwrap());
     config_params.push(raw_conf.get("automation_stands_assign_group").unwrap());
-    config_params.push(raw_conf.get::<String>("gua_broadcast_addresses").unwrap().replace("'", "\""));
+    config_params.push(
+        raw_conf
+            .get::<String>("gua_broadcast_addresses")
+            .unwrap()
+            .replace("'", "\""),
+    );
 
     return Ok(config_params);
 }

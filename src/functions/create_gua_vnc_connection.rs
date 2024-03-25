@@ -12,6 +12,7 @@ pub async fn create_gua_vnc_connection(
     gua_token: &String,
     input_host: &Host,
     conn_grp_id: &String,
+    brd_address: &String,
 ) -> Result<(), Box<dyn Error>> {
     let mut conn_user: String = String::new();
     //if sccm_host.username != "NO USER" {
@@ -65,7 +66,8 @@ pub async fn create_gua_vnc_connection(
     "username": "{}",
     "password": "",
     "wol-send-packet": "true",
-    "wol-mac-addr": "{}"
+    "wol-mac-addr": "{}",
+    "wol-broadcast-addr": "{}"
     }},"attributes": {{
     "max-connections": "",
     "max-connections-per-user": "",
@@ -76,7 +78,7 @@ pub async fn create_gua_vnc_connection(
     "guacd-hostname": ""
     }}
         }}"#,
-        conn_grp_id, input_host.hostname, input_host.ipv4, conn_user, input_host.mac
+        conn_grp_id, input_host.hostname, input_host.ipv4, conn_user, input_host.mac, brd_address
     );
 
     let client = reqwest::Client::new();

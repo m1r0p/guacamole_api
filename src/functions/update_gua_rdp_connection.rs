@@ -13,6 +13,7 @@ pub async fn update_gua_rdp_connection(
     input_host: &Host,
     conn_id: &String,
     conn_grp_id: &String,
+    brd_address: &String,
 ) -> Result<(), Box<dyn Error>> {
     let mut conn_user: String = String::new();
     if input_host.username != "no user" {
@@ -104,7 +105,8 @@ pub async fn update_gua_rdp_connection(
     "sftp-root-directory": "",
     "sftp-directory": "",
     "wol-send-packet": "true",
-    "wol-mac-addr": "{}"
+    "wol-mac-addr": "{}",
+    "wol-broadcast-addr": "{}"
     }},"attributes": {{
     "max-connections": "",
     "max-connections-per-user": "",
@@ -115,7 +117,7 @@ pub async fn update_gua_rdp_connection(
     "guacd-hostname": ""
     }}
         }}"#,
-        conn_grp_id, input_host.hostname, input_host.ipv4, conn_user, input_host.mac
+        conn_grp_id, input_host.hostname, input_host.ipv4, conn_user, input_host.mac, brd_address
     );
 
     //let request_data = format!(
@@ -137,7 +139,7 @@ pub async fn update_gua_rdp_connection(
 
     let client = reqwest::Client::new();
 
-    let _resp = client
+    let resp = client
         .put(format!(
             "{}{}/{}?token={}",
             gua_address, GUA_REST_CONNECTIONS, conn_id, gua_token
@@ -148,6 +150,8 @@ pub async fn update_gua_rdp_connection(
         .await?
         .text()
         .await?;
+
+    println!("{:?}", resp);
 
     return Ok(());
 }

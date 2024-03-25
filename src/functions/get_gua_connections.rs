@@ -66,8 +66,8 @@ pub async fn get_gua_connections(
         let protocol: String = raw_conn["protocol"].as_str().unwrap().to_string();
         match protocol.as_str() {
             _ if protocol.as_str() == "rdp" => {
-                let rdp_attributes_array: [String; 7] = tokio::task::spawn_blocking(move || {
-                    let rdp_attrs: [String; 7] =
+                let rdp_attributes_array: [String; 8] = tokio::task::spawn_blocking(move || {
+                    let rdp_attrs: [String; 8] =
                         get_gua_rdp_connection_details(gua_addr, gua_tkn, &conn_id).unwrap();
                     rdp_attrs
                 })
@@ -82,6 +82,7 @@ pub async fn get_gua_connections(
                         ignore_cert: rdp_attributes_array[4].clone(),
                         wol_send_packet: rdp_attributes_array[5].clone(),
                         wol_mac_addr: rdp_attributes_array[6].clone(),
+                        wol_broadcast_addr: rdp_attributes_array[7].clone(),
                     });
 
                 let conn: GuaConn = GuaConn {
@@ -98,8 +99,8 @@ pub async fn get_gua_connections(
             }
 
             _ if protocol.as_str() == "vnc" => {
-                let vnc_attributes_array: [String; 5] = tokio::task::spawn_blocking(move || {
-                    let vnc_attrs: [String; 5] =
+                let vnc_attributes_array: [String; 6] = tokio::task::spawn_blocking(move || {
+                    let vnc_attrs: [String; 6] =
                         get_gua_vnc_connection_details(gua_addr, gua_tkn, &conn_id).unwrap();
                     vnc_attrs
                 })
@@ -113,6 +114,7 @@ pub async fn get_gua_connections(
                         username: vnc_attributes_array[2].clone(),
                         wol_send_packet: vnc_attributes_array[3].clone(),
                         wol_mac_addr: vnc_attributes_array[4].clone(),
+                        wol_broadcast_addr: vnc_attributes_array[5].clone(),
                     });
 
                 let conn: GuaConn = GuaConn {

@@ -31,6 +31,7 @@ pub struct GuaRDPattributes {
     pub ignore_cert: String,
     pub wol_send_packet: String,
     pub wol_mac_addr: String,
+    pub wol_broadcast_addr: String,
 }
 
 #[derive(Debug)]
@@ -40,4 +41,5 @@ pub struct GuaVNCattributes {
     pub username: String,
     pub wol_send_packet: String,
     pub wol_mac_addr: String,
+    pub wol_broadcast_addr: String,
 }
