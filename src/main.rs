@@ -126,7 +126,7 @@ fn main() {
                             let host_ip: Ipv4Addr = rdp_host.ipv4.parse().unwrap();
                             for (b_net, b_addr) in broadcast_map.iter() {
                                 if b_net.contains(&host_ip) {
-                                    brd_address = b_addr.to_string();
+                                    brd_address = b_addr.to_string().replace("\"", "");
                                 }
                             }
                             println!("{} - {} BRD_ADDR - {}", &conn.name, &conn.identifier, &brd_address);
@@ -169,10 +169,10 @@ fn main() {
                             let host_ip: Ipv4Addr = vnc_host.ipv4.parse().unwrap();
                             for (b_net, b_addr) in broadcast_map.iter() {
                                 if b_net.contains(&host_ip) {
-                                    brd_address = b_addr.to_string();
+                                    brd_address = b_addr.to_string().replace("\"", "");
                                 }
                             }
-                            println!("{} - {}", &conn.name, &conn.identifier);
+                            println!("{} - {} BRD_ADDR - {}", &conn.name, &conn.identifier, &brd_address);
                             _ = update_gua_vnc_connection(
                                 &vec_config[0],
                                 &token,
@@ -215,7 +215,7 @@ fn main() {
             let host_ip: Ipv4Addr = rdp_host.ipv4.parse().unwrap();
             for (b_net, b_addr) in broadcast_map.iter() {
                 if b_net.contains(&host_ip) {
-                    brd_address = b_addr.to_string();
+                    brd_address = b_addr.to_string().replace("\"", "");
                 }
             }
             _ = create_gua_rdp_connection(
@@ -247,7 +247,7 @@ fn main() {
             let host_ip: Ipv4Addr = vnc_host.ipv4.parse().unwrap();
             for (b_net, b_addr) in broadcast_map.iter() {
                 if b_net.contains(&host_ip) {
-                    brd_address = b_addr.to_string();
+                    brd_address = b_addr.to_string().replace("\"", "");
                 }
             }
             _ = create_gua_vnc_connection(

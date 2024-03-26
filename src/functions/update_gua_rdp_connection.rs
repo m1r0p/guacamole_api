@@ -139,7 +139,7 @@ pub async fn update_gua_rdp_connection(
 
     let client = reqwest::Client::new();
 
-    let resp = client
+    let _resp = client
         .put(format!(
             "{}{}/{}?token={}",
             gua_address, GUA_REST_CONNECTIONS, conn_id, gua_token
@@ -151,7 +151,6 @@ pub async fn update_gua_rdp_connection(
         .text()
         .await?;
 
-    println!("{:?}", resp);
 
     return Ok(());
 }
