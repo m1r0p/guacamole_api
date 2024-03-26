@@ -19,7 +19,7 @@ or
 
 ```
 {
-    "gua_proto_address":"http://<your_ip_or_hostname>:8080/guacamole",
+    "gua_uri":"http://<your_ip_or_hostname>:8080/guacamole",
     "gua_user":"<guacamole_admin_user>",
     "gua_pass":"<password_for_admin_user>",
     "rdp_hosts_file":"<path_to_csv_with_rdp_hosts>",
