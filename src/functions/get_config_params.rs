@@ -18,7 +18,7 @@ pub fn get_config_params(string_path: String) -> Result<Vec<String>, Box<dyn Err
     config_params.push(raw_conf.get("automation_stands_assign_group").unwrap());
     config_params.push(
         raw_conf
-            .get::<String>("gua_broadcast_addresses")
+            .get::<String>("gua_broadcast_map")
             .unwrap()
             .replace("'", "\""),
     );

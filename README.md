@@ -25,7 +25,8 @@ or
     "rdp_hosts_file":"<path_to_csv_with_rdp_hosts>",
     "vnc_hosts_file":"<path_to_csv_with_vnc_hosts>",
     "manual_stands_assign_group":"AD_group_for_manual_stands",
-    "automation_stands_assign_group":"AD_group_for_automation_stands"
+    "automation_stands_assign_group":"AD_group_for_automation_stands",
+    "gua_broadcast_map":"{'<network1>':'<broadcast_address1>', '<network2>':'<broadcast_address2>'}"
 }
 
 
